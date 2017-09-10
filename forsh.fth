@@ -61,6 +61,17 @@ stage @ s" file" parg
 p /usr/share/longfile
 stage @ >len ?
 stage @ >buf 50 type cr
+: >null ( addr -- addr+u ) begin dup c@ 0<> while 1+ repeat ;
+
+: prep ( addr1 addr2 -- addr3 addr4 )
+  dup >r >r >buf
+  begin
+    dup c@ etx <>
+  while
+    dup r@ !
+    r> cell+ >r
+    >null 1+
+  repeat 0 r> ! r> dup @ swap ;
 
 \c #include <unistd.h>
 c-function exec execvp n n -- n
