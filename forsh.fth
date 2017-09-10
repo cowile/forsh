@@ -69,20 +69,21 @@ stage @ >buf 64 type cr
   iter do
     i c@ 0= if 1+ then
   loop ;
+: >field >null 1+ ;
 
-: prep ( addr1 addr2 -- addr3 addr4 )
-  dup >r >r >buf
-  begin
-    dup c@ etx <>
-  while
-    dup r@ !
-    r> cell+ >r
-    >null 1+
-  repeat
-  0 r> ! r> dup @ swap ;
+: prep ( addr1 addr2 -- )
+  over >buf rot #null 0 do
+    swap 2dup !
+    cell+
+    swap >field
+  loop 2drop ;
 
-( stage @ pad prep
+: ready ( addr1 addr2 -- addr1+u addr2 )
+  2dup prep swap >buf swap ;
+
+stage @ #null . cr
+stage @ pad ready
 pad 8 cells dump cr
 
- \c #include <unistd.h>
+( \c #include <unistd.h>
 c-function exec execvp n n -- n )
