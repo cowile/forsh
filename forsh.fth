@@ -64,6 +64,11 @@ stage @ >buf 64 type cr
 : iter ( addr -- addr+u addr )
   dup >buf swap >len @ bounds ;
 : >null ( addr -- addr+u ) begin dup c@ 0<> while 1+ repeat ;
+: #null ( addr -- u )
+  0 swap
+  iter do
+    i c@ 0= if 1+ then
+  loop ;
 
 : prep ( addr1 addr2 -- addr3 addr4 )
   dup >r >r >buf
