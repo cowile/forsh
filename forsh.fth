@@ -39,13 +39,17 @@ bl sep !
   fin
   >len r> 1+ swap +! ;
 
+: cmd parg ;
+
 : sf ( addr "char" -- ) char sflag ;
 : lf ( addr "string" -- ) sep @ word count lflag ;
 : pa ( addr "string" -- ) sep @ word count parg ;
+: co pa ;
 
 : s stage @ sf ;
 : l stage @ lf ;
 : p stage @ pa ;
+: c p ;
 
 128 new testbuf
 testbuf
