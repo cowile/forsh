@@ -53,6 +53,7 @@ bl sep !
 
 128 new testbuf
 testbuf
+c program
 stage @ char a sflag
 s b
 stage @ s" long" lflag
@@ -60,7 +61,8 @@ l longer
 stage @ s" file" parg
 p /usr/share/longfile
 stage @ >len ?
-stage @ >buf 50 type cr
+stage @ >buf 64 type cr
+
 : >null ( addr -- addr+u ) begin dup c@ 0<> while 1+ repeat ;
 
 : prep ( addr1 addr2 -- addr3 addr4 )
