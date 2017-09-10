@@ -17,7 +17,7 @@ bl sep !
 : fin ( addr -- ) dup null 1+ end ;
 
 : sflag ( addr c -- )
-  >r dup
+  >r
   dup start
   dash
   dup r> swap c! 1+
@@ -25,7 +25,7 @@ bl sep !
   >len 3 ( length of -?\0 ) swap +! ;
 
 : lflag ( addr1 addr2 u -- )
-  >r >r dup
+  >r >r
   dup start
   mdash
   dup r> swap r@ cmove r@ +
@@ -33,7 +33,7 @@ bl sep !
   >len r> 3 + ( length of --*\0 ) swap +! ;
 
 : parg ( addr1 addr2 u -- )
-  >r >r dup
+  >r >r
   dup start
   dup r> swap r@ cmove r@ +
   fin
@@ -73,7 +73,11 @@ stage @ >buf 64 type cr
     dup r@ !
     r> cell+ >r
     >null 1+
-  repeat 0 r> ! r> dup @ swap ;
+  repeat
+  0 r> ! r> dup @ swap ;
 
-\c #include <unistd.h>
-c-function exec execvp n n -- n
+( stage @ pad prep
+pad 8 cells dump cr
+
+ \c #include <unistd.h>
+c-function exec execvp n n -- n )
