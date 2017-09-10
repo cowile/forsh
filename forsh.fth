@@ -1,4 +1,3 @@
-3 constant etx
 variable stage
 variable sep
 bl sep !
@@ -13,8 +12,7 @@ bl sep !
 : dash ( addr -- addr+1 ) dup hyphen 1+ ;
 : mdash ( addr -- addr+1 ) dash dash ;
 : null ( addr -- ) 0 swap c! ;
-: end ( addr -- ) etx swap c! ;
-: fin ( addr -- ) dup null 1+ end ;
+: fin ( addr -- ) null ;
 
 : sflag ( addr c -- )
   >r
