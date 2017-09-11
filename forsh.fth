@@ -83,5 +83,11 @@ stage @ #null . cr
 stage @ pad ready
 pad 8 cells dump cr
 
-( \c #include <unistd.h>
-c-function exec execvp n n -- n )
+\c #include <unistd.h>
+c-function exec execvp a a -- n
+
+: run stage @ pad ready exec ;
+
+64 new t
+t
+c touch p newfile run
