@@ -5,9 +5,9 @@ bl sep !
 : new ( u "name" -- ) create 0 , allot does> stage ! ;
 : >len ;
 : >buf cell+ ;
-: start ( addr -- addr+u ) dup >len @ + >buf ;
 : clear ( addr -- ) >len 0 swap ! ;
 
+: start ( addr -- addr+u ) dup >len @ + >buf ;
 : hyphen ( addr -- ) [char] - swap c! ;
 : dash ( addr -- addr+1 ) dup hyphen 1+ ;
 : mdash ( addr -- addr+1 ) dash dash ;
@@ -15,24 +15,22 @@ bl sep !
 : fin ( addr -- ) null ;
 
 : sflag ( addr c -- )
-  >r
-  dup start
-  dash
-  dup r> swap c! 1+
+  over
+  start dash
+  dup -rot c! 1+
   fin
   >len 3 ( length of -?\0 ) swap +! ;
 
 : lflag ( addr1 addr2 u -- )
-  >r >r
-  dup start
-  mdash
+  >r >r dup
+  start mdash
   dup r> swap r@ cmove r@ +
   fin
   >len r> 3 + ( length of --*\0 ) swap +! ;
 
 : parg ( addr1 addr2 u -- )
-  >r >r
-  dup start
+  >r >r dup
+  start
   dup r> swap r@ cmove r@ +
   fin
   >len r> 1+ swap +! ;
