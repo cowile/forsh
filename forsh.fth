@@ -4,6 +4,7 @@ bl sep !
 
 : new ( u "name" -- ) create 0 , allot does> stage ! ;
 : >len ;
+: +len ( addr u -- ) swap >len +! ;
 : >buf cell+ ;
 : clear ( addr -- ) >len 0 swap ! ;
 
@@ -19,21 +20,21 @@ bl sep !
   start dash
   dup -rot c! 1+
   fin
-  >len 3 ( length of -?\0 ) swap +! ;
+  3 +len ( length of -?\0 ) ;
 
 : lflag ( addr1 addr2 u -- )
   >r >r dup
   start mdash
   dup r> swap r@ cmove r@ +
   fin
-  >len r> 3 + ( length of --*\0 ) swap +! ;
+  r> 3 + +len ( length of --*\0 ) ;
 
 : parg ( addr1 addr2 u -- )
   >r >r dup
   start
   dup r> swap r@ cmove r@ +
   fin
-  >len r> 1+ swap +! ;
+  r> 1+ +len ;
 
 : cmd parg ;
 
