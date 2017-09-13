@@ -23,16 +23,16 @@ bl sep !
   3 +len ( length of -?\0 ) ;
 
 : lflag ( addr1 addr2 u -- )
-  >r >r dup
+  >r over
   start mdash
-  dup r> swap r@ cmove r@ +
+  dup -rot r@ cmove r@ +
   fin
   r> 3 + +len ( length of --*\0 ) ;
 
 : parg ( addr1 addr2 u -- )
-  >r >r dup
+  >r over
   start
-  dup r> swap r@ cmove r@ +
+  dup -rot r@ cmove r@ +
   fin
   r> 1+ +len ;
 
