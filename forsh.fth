@@ -65,15 +65,15 @@ stage @ >buf 64 type cr
 : iter ( addr -- addr+u addr )
   dup >buf swap >len @ bounds ;
 : >null ( addr -- addr+u ) begin dup c@ 0<> while 1+ repeat ;
-: #null ( addr -- u )
+: >field >null 1+ ;
+: #fields ( addr -- u )
   0 swap
   iter do
     i c@ 0= if 1+ then
   loop ;
-: >field >null 1+ ;
 
 : prep ( addr1 addr2 -- )
-  over >buf rot #null 0 do
+  over >buf rot #fields 0 do
     swap 2dup !
     cell+
     swap >field
@@ -82,7 +82,7 @@ stage @ >buf 64 type cr
 : ready ( addr1 addr2 -- addr1+u addr2 )
   2dup prep swap >buf swap ;
 
-stage @ #null . cr
+stage @ #fields . cr
 stage @ pad ready
 pad 8 cells dump cr
 
