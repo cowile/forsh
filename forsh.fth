@@ -2,6 +2,8 @@ variable stage
 variable sep
 bl sep !
 
+: 3dup dup 2over rot ;
+
 : new ( u "name" -- ) create 0 , allot does> stage ! ;
 : >len ;
 : +len ( addr u -- ) swap >len +! ;
@@ -10,37 +12,37 @@ bl sep !
 
 : start ( addr -- addr+u ) dup >len @ + >buf ;
 : hyphen ( addr -- ) [char] - swap c! ;
-: dash ( addr -- addr+1 ) dup hyphen 1+ ;
-: mdash ( addr -- addr+1 ) dash dash ;
+: ndash ( addr -- addr+1 ) dup hyphen 1+ ;
+: mdash ( addr -- addr+1 ) ndash ndash ;
 : null ( addr -- ) 0 swap c! ;
 : fin ( addr -- ) null ;
+: lopt ( addr1 u addr2 -- )
+  3dup swap cmove + fin drop ;
+: sopt ( c addr -- )
+  2dup c! 1+ fin drop ;
 
-: sflag ( addr c -- )
-  over
-  start dash
-  dup -rot c! 1+
-  fin
-  3 +len ( length of -?\0 ) ;
+: lflag ( addr1 u addr2 -- )
+  3dup
+  start mdash lopt
+  swap 3 + +len drop ;
 
-: lflag ( addr1 addr2 u -- )
-  >r over
-  start mdash
-  dup -rot r@ cmove r@ +
-  fin
-  r> 3 + +len ( length of --*\0 ) ;
+: parg ( addr1 u addr2 -- )
+  3dup
+  start lopt
+  swap 1+ +len drop ;
 
-: parg ( addr1 addr2 u -- )
-  >r over
-  start
-  dup -rot r@ cmove r@ +
-  fin
-  r> 1+ +len ;
+: sflag ( c addr -- )
+  dup -rot
+  start ndash sopt
+  3 +len ;
 
 : cmd parg ;
 
-: sf ( addr "char" -- ) char sflag ;
-: lf ( addr "string" -- ) sep @ word count lflag ;
-: pa ( addr "string" -- ) sep @ word count parg ;
+: get sep @ word count ;
+
+: sf ( addr "string" -- ) char swap sflag ;
+: lf ( addr "string" -- ) get rot lflag ;
+: pa ( addr "string" -- ) get rot parg ;
 : co pa ;
 
 : s stage @ sf ;
@@ -51,11 +53,11 @@ bl sep !
 128 new testbuf
 testbuf
 c program
-stage @ char a sflag
+char a stage @ sflag
 s b
-stage @ s" long" lflag
+s" long" stage @ lflag
 l longer
-stage @ s" file" parg
+s" file" stage @ parg
 p /usr/share/longfile
 stage @ >len ?
 stage @ >buf 64 type cr
