@@ -99,6 +99,14 @@ c-function cwait wait a -- n
 \c #include <string.h>
 c-function explain strerror n -- a
 
+: print ( a -- )
+  dup >null over - type ;
+
+: report ( n -- )
+  dup 0<> if
+    cr explain print
+  then ;
+
 : wait ( -- n ) status cwait ;
 
 : pipe ( -- a ) line cpipe ;
