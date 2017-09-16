@@ -102,10 +102,7 @@ c-function explain strerror n -- a
 : print ( a -- )
   dup >null over - type ;
 
-: report ( n -- )
-  dup 0<> if
-    cr explain print
-  then ;
+: report ( n -- ) cr explain print ;
 
 : wait ( -- n ) status cwait ;
 
