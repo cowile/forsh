@@ -87,11 +87,20 @@ stage @ #fields . cr
 stage @ pad ready
 pad 8 cells dump cr
 
+variable status
+2variable line
+
 \c #include <unistd.h>
 c-function exec execvp a a -- n
+c-function fork fork -- n
+c-function cpipe pipe a -- n
+\c #include <sys/wait.h>
+c-function cwait wait a -- n
+\c #include <string.h>
+c-function explain strerror n -- a
 
-: run stage @ pad ready exec ;
+: wait ( -- n ) status cwait ;
 
-64 new t
-t
-c touch p newfile run
+: pipe ( -- a ) line cpipe ;
+: read@ line 2@ nip ;
+: write@ line 2@ drop ;
