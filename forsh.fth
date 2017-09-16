@@ -16,10 +16,16 @@ bl sep !
 : mdash ( addr -- addr+1 ) ndash ndash ;
 : null ( addr -- ) 0 swap c! ;
 : fin ( addr -- ) null ;
+
 : lopt ( addr1 u addr2 -- )
   3dup swap cmove + fin drop ;
 : sopt ( c addr -- )
   2dup c! 1+ fin drop ;
+
+: sflag ( c addr -- )
+  dup -rot
+  start ndash sopt
+  3 +len ;
 
 : lflag ( addr1 u addr2 -- )
   3dup
@@ -30,11 +36,6 @@ bl sep !
   3dup
   start lopt
   swap 1+ +len drop ;
-
-: sflag ( c addr -- )
-  dup -rot
-  start ndash sopt
-  3 +len ;
 
 : cmd parg ;
 
