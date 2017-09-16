@@ -6,33 +6,33 @@ bl sep !
 
 : new ( u "name" -- ) create 0 , allot does> stage ! ;
 : >len ;
-: +len ( addr u -- ) swap >len +! ;
+: +len ( a u -- ) swap >len +! ;
 : >buf cell+ ;
-: clear ( addr -- ) >len 0 swap ! ;
+: clear ( a -- ) >len 0 swap ! ;
 
-: start ( addr -- addr+u ) dup >len @ + >buf ;
-: hyphen ( addr -- ) [char] - swap c! ;
-: ndash ( addr -- addr+1 ) dup hyphen 1+ ;
-: mdash ( addr -- addr+1 ) ndash ndash ;
-: null ( addr -- ) 0 swap c! ;
-: fin ( addr -- ) null ;
+: start ( a -- a+u ) dup >len @ + >buf ;
+: hyphen ( a -- ) [char] - swap c! ;
+: ndash ( a -- a+1 ) dup hyphen 1+ ;
+: mdash ( a -- a+1 ) ndash ndash ;
+: null ( a -- ) 0 swap c! ;
+: fin ( a -- ) null ;
 
-: lopt ( addr1 u addr2 -- )
+: lopt ( a1 u a2 -- )
   3dup swap cmove + fin drop ;
-: sopt ( c addr -- )
+: sopt ( c a -- )
   2dup c! 1+ fin drop ;
 
-: sflag ( c addr -- )
+: sflag ( c a -- )
   dup -rot
   start ndash sopt
   3 +len ;
 
-: lflag ( addr1 u addr2 -- )
+: lflag ( a1 u a2 -- )
   3dup
   start mdash lopt
   swap 3 + +len drop ;
 
-: parg ( addr1 u addr2 -- )
+: parg ( a1 u a2 -- )
   3dup
   start lopt
   swap 1+ +len drop ;
@@ -41,9 +41,9 @@ bl sep !
 
 : get sep @ word count ;
 
-: sf ( addr "string" -- ) char swap sflag ;
-: lf ( addr "string" -- ) get rot lflag ;
-: pa ( addr "string" -- ) get rot parg ;
+: sf ( a "string" -- ) char swap sflag ;
+: lf ( a "string" -- ) get rot lflag ;
+: pa ( a "string" -- ) get rot parg ;
 : co pa ;
 
 : s stage @ sf ;
@@ -63,24 +63,24 @@ p /usr/share/longfile
 stage @ >len ?
 stage @ >buf 64 type cr
 
-: iter ( addr -- addr+u addr )
+: iter ( a -- a+u a )
   dup >buf swap >len @ bounds ;
-: >null ( addr -- addr+u ) begin dup c@ 0<> while 1+ repeat ;
+: >null ( a -- a+u ) begin dup c@ 0<> while 1+ repeat ;
 : >field >null 1+ ;
-: #fields ( addr -- u )
+: #fields ( a -- u )
   0 swap
   iter do
     i c@ 0= if 1+ then
   loop ;
 
-: prep ( addr1 addr2 -- )
+: prep ( a1 a2 -- )
   over >buf rot #fields 0 do
     swap 2dup !
     cell+
     swap >field
   loop 2drop ;
 
-: ready ( addr1 addr2 -- addr1+u addr2 )
+: ready ( a1 a2 -- a1+u a2 )
   2dup prep swap >buf swap ;
 
 stage @ #fields . cr
