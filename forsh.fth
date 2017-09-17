@@ -1,9 +1,4 @@
 variable stage
-variable sep
-bl sep !
-
-: 3dup dup 2over rot ;
-
 : new ( u "name" -- ) create 0 , allot does> stage ! ;
 : >len ;
 : +len ( a u -- ) swap >len +! ;
@@ -17,6 +12,7 @@ bl sep !
 : null ( a -- ) 0 swap c! ;
 : fin ( a -- ) null ;
 
+: 3dup dup 2over rot ;
 : lopt ( a1 u a2 -- )
   3dup swap cmove + fin drop ;
 : sopt ( c a -- )
@@ -26,19 +22,18 @@ bl sep !
   dup -rot
   start ndash sopt
   3 +len ;
-
 : lflag ( a1 u a2 -- )
   3dup
   start mdash lopt
   swap 3 + +len drop ;
-
 : parg ( a1 u a2 -- )
   3dup
   start lopt
   swap 1+ +len drop ;
-
 : cmd parg ;
 
+variable sep
+bl sep !
 : get sep @ word count ;
 
 : sf ( a "string" -- ) char swap sflag ;
@@ -79,7 +74,6 @@ stage @ >buf 64 type cr
     cell+
     swap >field
   loop 2drop ;
-
 : ready ( a1 a2 -- a1+u a2 )
   2dup prep swap >buf swap ;
 
@@ -88,21 +82,8 @@ stage @ pad ready
 pad 8 cells dump cr
 2drop
 
-variable status
-2variable line
-
-\c #include <stdio.h>
-c-function fdopen fdopen n a -- a
 \c #include <string.h>
 c-function explain strerror n -- a
-\c #include <sys/wait.h>
-c-function cwait wait a -- n
-\c #include <unistd.h>
-c-function cdup2 dup2 n n -- n
-c-function cpipe pipe a -- n
-c-function exec execvp a a -- n
-c-function fork fork -- n
-
 : print ( a -- ) dup >null over - type ;
 : report ( n -- ) cr explain print ;
 : ?err ( n -- )
@@ -112,14 +93,22 @@ c-function fork fork -- n
     report abort
   then ;
 
+\c #include <sys/wait.h>
+c-function cwait wait a -- n
+variable status
 : wait ( -- n ) status cwait ;
 
+\c #include <stdio.h>
+c-function fdopen fdopen n a -- a
 : fd>fp ( n c -- n ) pad swap c!+ fin pad fdopen ;
 : fd>ro ( n -- n ) [char] r fd>fp ;
 : fd>wo ( n -- n ) [char] w fd>fp ;
 : conv ( n1 -- n2 n3 )
   dup 32 rshift fd>wo
   swap 32 lshift 32 rshift fd>ro ;
+
+\c #include <unistd.h>
+c-function cpipe pipe a -- n
 : pipe ( -- n1 n2 )
   pad cpipe ?err pad @ conv ;
 : read@ 2@ nip ;
@@ -129,3 +118,7 @@ c-function fork fork -- n
 pipe line 2!
 line write@ close-file ?err
 line read@ close-file ?err
+
+c-function cdup2 dup2 n n -- n
+c-function exec execvp a a -- n
+c-function fork fork -- n
