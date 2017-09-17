@@ -114,6 +114,12 @@ c-function fork fork -- n
 
 : wait ( -- n ) status cwait ;
 
-: pipe ( -- a ) line cpipe ;
+: split ( n1 -- n2 n3 )
+  dup 32 rshift
+  swap 32 lshift 32 rshift ;
+: pipe ( -- n1 n2 )
+  pad cpipe ?err pad @ split ;
 : read@ line 2@ nip ;
 : write@ line 2@ drop ;
+
+pipe line 2!
