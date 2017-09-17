@@ -11,8 +11,8 @@ bl sep !
 : clear ( a -- ) >len 0 swap ! ;
 
 : start ( a -- a+u ) dup >len @ + >buf ;
-: hyphen ( a -- ) [char] - swap c! ;
-: ndash ( a -- a+1 ) dup hyphen 1+ ;
+: c!+ ( a c -- a+1 ) over c! 1+ ;
+: ndash ( a -- a+1 ) [char] - c!+ ;
 : mdash ( a -- a+1 ) ndash ndash ;
 : null ( a -- ) 0 swap c! ;
 : fin ( a -- ) null ;
@@ -92,7 +92,7 @@ variable status
 2variable line
 
 \c #include <stdio.h>
-c-function fd>file fdopen n a -- a
+c-function fdopen fdopen n a -- a
 \c #include <string.h>
 c-function explain strerror n -- a
 \c #include <sys/wait.h>
@@ -114,12 +114,15 @@ c-function fork fork -- n
 
 : wait ( -- n ) status cwait ;
 
-: split ( n1 -- n2 n3 )
-  dup 32 rshift
-  swap 32 lshift 32 rshift ;
+: fd>fp ( n c -- n ) pad swap c!+ fin pad fdopen ;
+: fd>ro ( n -- n ) [char] r fd>fp ;
+: fd>wo ( n -- n ) [char] w fd>fp ;
+: conv ( n1 -- n2 n3 )
+  dup 32 rshift fd>wo
+  swap 32 lshift 32 rshift fd>ro ;
 : pipe ( -- n1 n2 )
-  pad cpipe ?err pad @ split ;
+  pad cpipe ?err pad @ conv ;
 : read@ line 2@ nip ;
 : write@ line 2@ drop ;
 
-pipe line 2!
+pipe line 2! write@ close-file read@ close-file 2drop
