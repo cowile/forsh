@@ -103,10 +103,14 @@ c-function cpipe pipe a -- n
 c-function exec execvp a a -- n
 c-function fork fork -- n
 
-: print ( a -- )
-  dup >null over - type ;
-
+: print ( a -- ) dup >null over - type ;
 : report ( n -- ) cr explain print ;
+: ?err ( n -- )
+  dup 0= if
+    drop
+  else
+    report abort
+  then ;
 
 : wait ( -- n ) status cwait ;
 
