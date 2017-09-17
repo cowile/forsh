@@ -122,7 +122,10 @@ c-function fork fork -- n
   swap 32 lshift 32 rshift fd>ro ;
 : pipe ( -- n1 n2 )
   pad cpipe ?err pad @ conv ;
-: read@ line 2@ nip ;
-: write@ line 2@ drop ;
+: read@ 2@ nip ;
+: write@ 2@ drop ;
 
-pipe line 2! write@ close-file read@ close-file 2drop
+2variable line
+pipe line 2!
+line write@ close-file ?err
+line read@ close-file ?err
