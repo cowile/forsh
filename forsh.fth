@@ -86,6 +86,7 @@ stage @ >buf 64 type cr
 stage @ #fields . cr
 stage @ pad ready
 pad 8 cells dump cr
+2drop
 
 variable status
 2variable line
