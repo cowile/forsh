@@ -91,14 +91,17 @@ pad 8 cells dump cr
 variable status
 2variable line
 
-\c #include <unistd.h>
-c-function exec execvp a a -- n
-c-function fork fork -- n
-c-function cpipe pipe a -- n
-\c #include <sys/wait.h>
-c-function cwait wait a -- n
+\c #include <stdio.h>
+c-function fd>file fdopen n a -- a
 \c #include <string.h>
 c-function explain strerror n -- a
+\c #include <sys/wait.h>
+c-function cwait wait a -- n
+\c #include <unistd.h>
+c-function cdup2 dup2 n n -- n
+c-function cpipe pipe a -- n
+c-function exec execvp a a -- n
+c-function fork fork -- n
 
 : print ( a -- )
   dup >null over - type ;
