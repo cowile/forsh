@@ -16,7 +16,7 @@ variable stage
 : lopt ( a1 u a2 -- )
   3dup swap cmove + fin drop ;
 : sopt ( c a -- )
-  2dup c! 1+ fin drop ;
+  swap c!+ fin ;
 
 : sflag ( c a -- )
   dup -rot
