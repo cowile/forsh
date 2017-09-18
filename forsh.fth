@@ -82,27 +82,28 @@ stage @ pad ready
 pad 8 cells dump cr
 2drop
 
+: print ( a -- ) dup >null over - type ;
+\c #include <errno.h>
+c-function errno __errno_location -- a
 \c #include <string.h>
 c-function explain strerror n -- a
-: print ( a -- ) dup >null over - type ;
 : report ( n -- ) cr explain print ;
-: ?err ( n -- )
-  dup 0= if
-    drop
-  else
-    report abort
-  then ;
+: ?err ( -- )
+  errno @ 0<> if
+    errno @ report
+  then
+  0 errno ! ;
 
 \c #include <sys/wait.h>
 c-function cwait wait a -- n
 variable status
-: wait ( -- n ) status cwait ;
+: wait ( -- n ) status cwait ?err ;
 
 \c #include <stdio.h>
 c-function fdopen fdopen n a -- a
-: fd>fp ( n c -- n ) pad swap c!+ fin pad fdopen ;
-: fd>ro ( n -- n ) [char] r fd>fp ;
-: fd>wo ( n -- n ) [char] w fd>fp ;
+: fd>fp ( n1 c -- n2 ) pad swap c!+ fin pad fdopen ?err ;
+: fd>ro ( n1 -- n2 ) [char] r fd>fp ;
+: fd>wo ( n1 -- n2 ) [char] w fd>fp ;
 : conv ( n1 -- n2 n3 )
   dup 32 rshift fd>wo
   swap 32 lshift 32 rshift fd>ro ;
