@@ -1,5 +1,6 @@
 variable stage
-: new ( u "name" -- ) create 0 , allot does> stage ! ;
+: new ( u "name" -- ) create 0 , allot ;
+: actor ( u "name" -- ) new does> stage ! ;
 : >len ;
 : +len ( a u -- ) swap >len +! ;
 : >buf cell+ ;
@@ -47,8 +48,8 @@ bl sep !
 : c p ;
 : cl stage @ clear ;
 
-128 new testbuf
-testbuf
+128 actor prog
+prog
 c program
 char a stage @ sflag
 s b
@@ -57,7 +58,7 @@ l longer
 s" file" stage @ parg
 p /usr/share/longfile
 stage @ >len ?
-stage @ >buf 64 type cr
+stage @ >buf 55 type cr
 
 : iter ( a -- a+u a )
   dup >buf swap >len @ bounds ;
@@ -135,4 +136,4 @@ line read@ close-file ?err drop
 : fork ( -- n ) cfork ?err dup -1 = if rdrop then ;
 : exec ( a1 a2 -- ) cexec ?err drop ;
 : run ( a -- ) pad ready exec ;
-: do ( -- ) stage @ run ;
+: go ( -- ) stage @ run ;
