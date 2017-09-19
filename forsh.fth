@@ -45,6 +45,7 @@ bl sep !
 : l stage @ lf ;
 : p stage @ pa ;
 : c p ;
+: cl stage @ clear ;
 
 128 new testbuf
 testbuf
@@ -83,10 +84,12 @@ pad 8 cells dump cr
 2drop
 
 : print ( a -- ) dup >null over - type ;
+
 \c #include <errno.h>
 c-function errno __errno_location -- a
 \c #include <string.h>
 c-function explain strerror n -- a
+
 : report ( n -- ) cr explain print ;
 : ?err ( -- )
   errno @ 0<> if
@@ -96,11 +99,15 @@ c-function explain strerror n -- a
 
 \c #include <sys/wait.h>
 c-function cwait wait a -- n
+
 variable status
 : wait ( -- n ) status cwait ?err ;
+: stat ( -- n ) status @ 8 rshift 255 and ;
+: sig ( -- n ) status @ 255 and ;
 
 \c #include <stdio.h>
 c-function fdopen fdopen n a -- a
+
 : fd>fp ( n1 c -- n2 ) pad swap c!+ fin pad fdopen ?err ;
 : fd>ro ( n1 -- n2 ) [char] r fd>fp ;
 : fd>wo ( n1 -- n2 ) [char] w fd>fp ;
@@ -109,17 +116,23 @@ c-function fdopen fdopen n a -- a
   swap 32 lshift 32 rshift fd>ro ;
 
 \c #include <unistd.h>
+c-function cexec execvp a a -- n
+c-function cfork fork -- n
 c-function cpipe pipe a -- n
+c-function cdup2 dup2 n n -- n
+
 : pipe ( -- n1 n2 )
-  pad cpipe ?err pad @ conv ;
+  pad cpipe ?err drop pad @ conv ;
 : read@ 2@ nip ;
 : write@ 2@ drop ;
 
+0 errno !
 2variable line
 pipe line 2!
-line write@ close-file ?err
-line read@ close-file ?err
+line write@ close-file ?err drop
+line read@ close-file ?err drop
 
-c-function cdup2 dup2 n n -- n
-c-function exec execvp a a -- n
-c-function fork fork -- n
+: fork ( -- n ) cfork ?err dup -1 = if rdrop then ;
+: exec ( a1 a2 -- ) cexec ?err drop ;
+: run ( a -- ) pad ready exec ;
+: do ( -- ) stage @ run ;
