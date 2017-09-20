@@ -62,7 +62,7 @@ stage @ >buf 55 type cr
 
 : iter ( a -- a+u a )
   dup >buf swap >len @ bounds ;
-: >null ( a -- a+u ) begin dup c@ 0<> while 1+ repeat ;
+: >null ( a -- a+u ) begin 1+ dup c@ 0= until ;
 : >field >null 1+ ;
 : #fields ( a -- u )
   0 swap
