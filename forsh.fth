@@ -2,7 +2,7 @@ variable stage
 : new ( u "name" -- ) create 0 , allot ;
 : actor ( u "name" -- ) new does> stage ! ;
 : >len ;
-: +len ( a u -- ) swap >len +! ;
+: +len ( a n -- ) swap >len +! ;
 : >buf cell+ ;
 : clear ( a -- ) >len 0 swap ! ;
 
@@ -60,10 +60,11 @@ p /usr/share/longfile
 stage @ >len ?
 stage @ >buf 55 type cr
 
-: iter ( a -- a+u a )
-  dup >buf swap >len @ bounds ;
 : >null ( a -- a+u ) begin 1+ dup c@ 0= until ;
 : >field >null 1+ ;
+: print ( a -- ) dup >null over - type ;
+: iter ( a -- a+u a )
+  dup >buf swap >len @ bounds ;
 : #fields ( a -- u )
   0 swap
   iter do
@@ -83,8 +84,6 @@ stage @ #fields . cr
 stage @ pad ready
 pad 8 cells dump cr
 2drop
-
-: print ( a -- ) dup >null over - type ;
 
 \c #include <errno.h>
 c-function errno __errno_location -- a
@@ -108,10 +107,10 @@ variable status
 \c #include <stdio.h>
 c-function fdopen fdopen n a -- a
 
-: fd>fp ( n1 c -- n2 ) pad swap c!+ fin pad fdopen ?err ;
-: fd>ro ( n1 -- n2 ) [char] r fd>fp ;
-: fd>wo ( n1 -- n2 ) [char] w fd>fp ;
-: conv ( n1 -- n2 n3 )
+: fd>fp ( fd c -- fp ) pad swap c!+ fin pad fdopen ?err ;
+: fd>ro ( fd -- fp ) [char] r fd>fp ;
+: fd>wo ( fd -- fp ) [char] w fd>fp ;
+: conv ( n -- fd1 fd2 )
   dup 32 lshift 32 rshift
   swap 32 rshift ;
 
@@ -121,12 +120,12 @@ c-function cfork fork -- n
 c-function cpipe pipe a -- n
 c-function cdup2 dup2 n n -- n
 
-: pipe ( -- n1 n2 )
+: pipe ( -- fd1 fd2 )
   pad cpipe ?err drop pad @ conv ;
 : read@ 2@ drop ;
 : write@ 2@ nip ;
-: wclose ( n1 -- n2 ) fd>wo close-file ?err drop ;
-: rclose ( n1 -- n2 ) fd>ro close-file ?err drop ;
+: wclose ( fd -- ) fd>wo close-file ?err drop ;
+: rclose ( fd -- ) fd>ro close-file ?err drop ;
 
 0 errno !
 2variable line
@@ -137,7 +136,7 @@ line read@ rclose
 0 constant stin
 1 constant stout
 2 constant sterr
-: clone ( n1 n2 -- ) cdup2 ?err drop ;
+: clone ( fd1 fd2 -- ) cdup2 ?err drop ;
 : fork ( -- n ) cfork ?err dup -1 = if rdrop then ;
 : exec ( a1 a2 -- ) cexecvp ?err drop ;
 : run ( a -- ) pad ready exec ;
@@ -147,22 +146,22 @@ line read@ rclose
 : $ ( -- n ) stage @ % ;
 
 variable #io
-: rin ( n -- ) dup pad #io @ rot read-file drop ;
+: rin ( fp -- ) dup pad #io @ rot read-file drop ;
 : wout ( -- ) pad #io @ stdout write-file drop ;
-: show ( n -- )
+: show ( fp -- )
   cr #io @ swap
   begin
     rin #io ! wout
   dup file-eof? until
   drop #io ! ;
 
-: >|| ( a -- n )
+: >|| ( a -- fd )
   pipe fork 0= if
     stout clone swap run
   else
     wclose nip
   then ;
-: || ( a n -- n )
+: || ( a fd1 -- fd2 )
   pipe rot fork 0= if
     stin clone
     stout clone
@@ -170,13 +169,13 @@ variable #io
   else
     rclose wclose nip
   then ;
-: ||> ( a n -- ) || fd>ro show ;
+: ||> ( a fd -- ) || fd>ro show ;
 
-: >| ( -- n ) stage @ >|| ;
-: | ( n -- n ) stage @ swap || ;
-: |> ( n -- ) stage @ swap ||> ;
+: >| ( -- fd ) stage @ >|| ;
+: | ( fd1 -- fd2 ) stage @ swap || ;
+: |> ( fd -- ) stage @ swap ||> ;
 
-10 #io !
+1 8 lshift #io !
 36 actor echo
 36 actor cat
 echo c echo p hello
