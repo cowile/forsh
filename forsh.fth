@@ -116,7 +116,7 @@ c-function fdopen fdopen n a -- a
   swap 32 rshift ;
 
 \c #include <unistd.h>
-c-function cexec execvp a a -- n
+c-function cexecvp execvp a a -- n
 c-function cfork fork -- n
 c-function cpipe pipe a -- n
 c-function cdup2 dup2 n n -- n
@@ -132,7 +132,11 @@ pipe line 2!
 line write@ close-file ?err drop
 line read@ close-file ?err drop
 
+0 constant stin
+1 constant stout
+2 constant sterr
+: clone ( n1 n2 -- ) cdup2 ?err drop ;
 : fork ( -- n ) cfork ?err dup -1 = if rdrop then ;
-: exec ( a1 a2 -- ) cexec ?err drop ;
+: exec ( a1 a2 -- ) cexecvp ?err drop ;
 : run ( a -- ) pad ready exec ;
 : go ( -- ) stage @ run ;
