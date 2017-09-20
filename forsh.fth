@@ -175,3 +175,10 @@ variable #io
 : >| ( -- n ) stage @ >|| ;
 : | ( n -- n ) stage @ swap || ;
 : |> ( n -- ) stage @ swap ||> ;
+
+10 #io !
+36 actor echo
+36 actor cat
+echo c echo p hello
+cat c cat
+echo >| cat |>
