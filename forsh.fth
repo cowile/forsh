@@ -155,3 +155,23 @@ variable #io
     rin #io ! wout
   dup file-eof? until
   drop #io ! ;
+
+: >|| ( a -- n )
+  pipe fork 0= if
+    stout clone swap run
+  else
+    wclose nip
+  then ;
+: || ( a n -- n )
+  pipe rot fork 0= if
+    stin clone
+    stout clone
+    swap run
+  else
+    rclose wclose nip
+  then ;
+: ||> ( a n -- ) || fd>ro show ;
+
+: >| ( -- n ) stage @ >|| ;
+: | ( n -- n ) stage @ swap || ;
+: |> ( n -- ) stage @ swap ||> ;
