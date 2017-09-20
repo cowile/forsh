@@ -142,3 +142,6 @@ line read@ rclose
 : exec ( a1 a2 -- ) cexecvp ?err drop ;
 : run ( a -- ) pad ready exec ;
 : go ( -- ) stage @ run ;
+: stop ( -- n ) wait drop stat ;
+: % ( a -- n ) fork 0= if run else drop stop then ;
+: $ ( -- n ) stage @ % ;
