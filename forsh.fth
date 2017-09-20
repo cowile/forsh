@@ -125,12 +125,14 @@ c-function cdup2 dup2 n n -- n
   pad cpipe ?err drop pad @ conv ;
 : read@ 2@ drop ;
 : write@ 2@ nip ;
+: wclose ( n1 -- n2 ) fd>wo close-file ?err drop ;
+: rclose ( n1 -- n2 ) fd>ro close-file ?err drop ;
 
 0 errno !
 2variable line
 pipe line 2!
-line write@ close-file ?err drop
-line read@ close-file ?err drop
+line write@ wclose
+line read@ rclose
 
 0 constant stin
 1 constant stout
