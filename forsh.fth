@@ -112,8 +112,8 @@ c-function fdopen fdopen n a -- a
 : fd>ro ( n1 -- n2 ) [char] r fd>fp ;
 : fd>wo ( n1 -- n2 ) [char] w fd>fp ;
 : conv ( n1 -- n2 n3 )
-  dup 32 rshift fd>wo
-  swap 32 lshift 32 rshift fd>ro ;
+  dup 32 lshift 32 rshift
+  swap 32 rshift ;
 
 \c #include <unistd.h>
 c-function cexec execvp a a -- n
@@ -123,8 +123,8 @@ c-function cdup2 dup2 n n -- n
 
 : pipe ( -- n1 n2 )
   pad cpipe ?err drop pad @ conv ;
-: read@ 2@ nip ;
-: write@ 2@ drop ;
+: read@ 2@ drop ;
+: write@ 2@ nip ;
 
 0 errno !
 2variable line
