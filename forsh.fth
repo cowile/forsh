@@ -145,3 +145,13 @@ line read@ rclose
 : stop ( -- n ) wait drop stat ;
 : % ( a -- n ) fork 0= if run else drop stop then ;
 : $ ( -- n ) stage @ % ;
+
+variable #io
+: rin ( n -- ) dup pad #io @ rot read-file drop ;
+: wout ( -- ) pad #io @ stdout write-file drop ;
+: show ( n -- )
+  cr #io @ swap
+  begin
+    rin #io ! wout
+  dup file-eof? until
+  drop #io ! ;
