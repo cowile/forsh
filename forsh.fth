@@ -148,14 +148,17 @@ line read@ rclose
 : $ ( -- n ) stage @ % ;
 
 variable #io
-: rin ( fp -- ) dup pad #io @ rot read-file drop ;
-: wout ( -- ) pad #io @ stdout write-file drop ;
-: show ( fp -- )
-  cr #io @ swap
+: iobuf ( fp -- a u fp ) pad #io @ rot ;
+: rin ( fp -- ) iobuf read-file ?err drop ;
+: wout ( fp -- ) iobuf write-file ?err drop ;
+: copy ( fp1 fp2 -- )
+  cr #io @ -rot
   begin
-    rin #io ! wout
-  dup file-eof? until
-  drop #io ! ;
+    over rin #io ! dup wout
+  over file-eof? until
+  2drop #io ! ;
+: tell ( fp -- ) stdout copy ;
+: wail ( fp -- ) stderr copy ;
 
 : >|| ( a -- fp )
   pipe fork 0= if
@@ -172,7 +175,7 @@ variable #io
   else
     rclose wclose nip
   then ;
-: ||> ( a fp -- ) || show ;
+: ||> ( a fp -- ) || tell ;
 
 : >| ( -- fp ) stage @ >|| ;
 : | ( fp1 -- fp2 ) stage @ swap || ;
