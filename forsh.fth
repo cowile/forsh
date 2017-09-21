@@ -62,7 +62,6 @@ stage @ >buf 55 type cr
 
 : >null ( a -- a+u ) begin 1+ dup c@ 0= until ;
 : >field >null 1+ ;
-: print ( a -- ) dup >null over - type ;
 : iter ( a -- a+u a )
   dup >buf swap >len @ bounds ;
 : #fields ( a -- u )
@@ -88,6 +87,7 @@ pad 8 cells dump cr
 \c #include <errno.h>
 c-function errno __errno_location -- a
 
+: print ( a -- ) dup >null over - type ;
 : explain ( n -- ) strerror ;
 : report ( n -- ) cr explain print ;
 : ?err ( -- )
@@ -105,14 +105,17 @@ variable status
 : sig ( -- n ) status @ 255 and ;
 
 \c #include <stdio.h>
-c-function fdopen fdopen n a -- a
+c-function cfdopen fdopen n a -- a
+c-function cfileno fileno a -- n
 
-: fd>fp ( fd c -- fp ) pad swap c!+ fin pad fdopen ?err ;
+: fdopen cfdopen ?err ;
+: fileno cfileno ?err ;
+: fd>fp ( fd c -- fp ) pad swap c!+ fin pad fdopen ;
 : fd>ro ( fd -- fp ) [char] r fd>fp ;
 : fd>wo ( fd -- fp ) [char] w fd>fp ;
 : conv ( n -- fd1 fd2 )
-  dup 32 lshift 32 rshift
-  swap 32 rshift ;
+  dup 32 lshift 32 rshift fd>ro
+  swap 32 rshift fd>wo ;
 
 \c #include <unistd.h>
 c-function cexecvp execvp a a -- n
@@ -124,8 +127,8 @@ c-function cdup2 dup2 n n -- n
   pad cpipe ?err drop pad @ conv ;
 : read@ 2@ drop ;
 : write@ 2@ nip ;
-: wclose ( fd -- ) fd>wo close-file ?err drop ;
-: rclose ( fd -- ) fd>ro close-file ?err drop ;
+: wclose ( fd -- ) close-file ?err drop ;
+: rclose ( fd -- ) close-file ?err drop ;
 
 0 errno !
 2variable line
@@ -155,29 +158,28 @@ variable #io
   dup file-eof? until
   drop #io ! ;
 
-: >|| ( a -- fd )
+: >|| ( a -- fp )
   pipe fork 0= if
+    fileno
     stout clone swap run
   else
     wclose nip
   then ;
-: || ( a fd1 -- fd2 )
+: || ( a fp1 -- fp2 )
   pipe rot fork 0= if
-    stin clone
-    stout clone
+    fileno stin clone
+    fileno stout clone
     swap run
   else
     rclose wclose nip
   then ;
-: ||> ( a fd -- ) || fd>ro show ;
+: ||> ( a fp -- ) || show ;
 
-: >| ( -- fd ) stage @ >|| ;
-: | ( fd1 -- fd2 ) stage @ swap || ;
-: |> ( fd -- ) stage @ swap ||> ;
+: >| ( -- fp ) stage @ >|| ;
+: | ( fp1 -- fp2 ) stage @ swap || ;
+: |> ( fp -- ) stage @ swap ||> ;
 
 1 8 lshift #io !
-36 actor echo
-36 actor cat
-echo c echo p hello
-cat c cat
-echo >| cat |>
+36 actor def
+def
+c echo p hello >| cl c cat |
