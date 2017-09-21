@@ -87,9 +87,8 @@ pad 8 cells dump cr
 \c #include <errno.h>
 c-function errno __errno_location -- a
 
-: print ( a -- ) dup >null over - type ;
 : explain ( n -- ) strerror ;
-: report ( n -- ) cr explain print ;
+: report ( n -- ) cr explain type ;
 : ?err ( -- )
   errno @ 0<> if
     errno @ report
