@@ -180,8 +180,11 @@ variable #io
 : >| ( -- fp ) stage @ >|| ;
 : | ( fp1 -- fp2 ) stage @ swap || ;
 : |> ( fp -- ) stage @ swap ||> ;
+: f>| ( a u -- fp ) r/o open-file ?err drop ;
+: |>f ( fp a u -- ) w/o create-file ?err drop copy ;
 
 1 8 lshift #io !
 36 actor def
 def
-c echo p hello >| cl c cat |
+c echo p hello >| cl c cat |>
+cl c echo p hello >| s" file" |>f
