@@ -15,20 +15,21 @@ variable sep
 : pa ( a "string" -- ) get rot parg ;
 : co pa ;
 
+\ These correspond to sflag, lflag, and parg.
 : s stage @ sf ;
 : l stage @ lf ;
 : p stage @ pa ;
-: cl stage @ clear ;
 
 \ Because program names are always first, a new program name
 \ clears the current actor.
+: cl stage @ clear ;
 : c cl p ;
 
 \ Execute a program, replacing the current shell.
-: go ( -- ) stage @ run ;
+: go ( -- ) cr stage @ run ;
 
 \ Execute a program and wait for it to complete.
-: $ ( -- n ) stage @ % ;
+: $ ( -- n ) cr stage @ % ;
 
 \ Execute a program and pipe to other programs.
 : >| ( -- fp ) stage @ >|| ;
