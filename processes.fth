@@ -50,7 +50,8 @@ c-function cfork fork -- n
 \ Serially execute a process.
 : run ( a -- ) pad ready exec ;
 : stop ( -- n ) wait drop stat ;
-: % ( a -- n ) fork 0= if run else drop stop then ;
+: $$ ( a -- n ) fork 0= if run else drop stop then ;
+: && ( a -- ) fork 0= if run then drop ;
 
 \ These words construct pipelines. There are three. One to
 \ enter a pipeline, one to continue, and one to exit.

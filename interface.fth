@@ -43,7 +43,10 @@ variable sep
 : go ( -- ) cr stage @ run ;
 
 \ Execute a program and wait for it to complete.
-: $ ( -- n ) cr stage @ % ;
+: $ ( -- n ) cr stage @ && ;
+
+\ Execute a program in the background.
+: & ( -- ) cr stage @ && ;
 
 \ Execute a program and pipe to other programs.
 : >| ( -- fp ) stage @ >|| ;
