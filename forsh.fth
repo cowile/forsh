@@ -10,6 +10,7 @@ set-current
 
 \ Clear any junk memory errors.
 0 errno !
+0 status !
 
 \ This is the separator that delimits inline arguments.
 \ It is a space character by default. To include spaces in an
