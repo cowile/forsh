@@ -4,6 +4,7 @@
 \ programmatic and general words. They are very short for
 \ easy typing.
 
+require directories.fth
 require processes.fth
 
 \ word has a limit of 255 character string, but no one should
@@ -31,6 +32,12 @@ variable sep
 \ clears the current actor.
 : cl stage @ clear ;
 : c cl p ;
+
+\ Changing a directory has to be a shell function Unix prevents
+\ programs from changing parents' working directories.
+: d ( "string" -- ) get chdir ;
+: qd ['] d quote ;
+: up s" .." chdir ;
 
 \ Execute a program, replacing the current shell.
 : go ( -- ) cr stage @ run ;
