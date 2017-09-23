@@ -23,8 +23,9 @@ variable sep
 \ This is a quoted parg. It changes the separator to the next
 \ character in the stream, then changes it back after getting
 \ the field.
-\ Example, q "this has spaces"
-: q sep @ char sep ! p sep ! ;
+\ Example, q " this has spaces"
+: quote ( xt -- ) sep @ char sep ! execute sep ! ;
+: q ['] p quote ;
 
 \ Because program names are always first, a new program name
 \ clears the current actor.
