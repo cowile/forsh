@@ -32,7 +32,7 @@ variable stage
 
 \ Store the long option string at a2.
 : lopt ( a1 u a2 -- )
-  3dup swap cmove + fin drop ;
+  3dup swap move + fin drop ;
 
 \ Store the short option character at a.
 : sopt ( c a -- ) c!+ fin ;
