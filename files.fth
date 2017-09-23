@@ -3,7 +3,6 @@
 \ to file pointers for use with other file handling functions
 \ provided by gforth.
 
-require actors.fth \ Use c!+.
 require errors.fth
 
 \c #include <stdio.h>
@@ -13,7 +12,7 @@ c-function cfileno fileno a -- n
 \ Whenever convenient, add error checking to system calls.
 : fdopen cfdopen ?err ;
 : fileno cfileno ?err ;
-: fd>fp ( fd c -- fp ) pad c!+ fin pad fdopen ;
+: fd>fp ( fd c -- fp ) pad c! 0 pad 1+ c! pad fdopen ;
 : fd>ro ( fd -- fp ) [char] r fd>fp ;
 : fd>wo ( fd -- fp ) [char] w fd>fp ;
 
