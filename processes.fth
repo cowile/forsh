@@ -1,6 +1,7 @@
 \ These words control the manipulation of Unix processes and
 \ convert actors into executable forms.
 
+require actors.fth
 require files.fth
 
 \ These words allow examination of child processes.
