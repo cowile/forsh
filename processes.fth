@@ -51,7 +51,7 @@ c-function cfork fork -- n
 : run ( a -- ) pad ready exec ;
 : stop ( -- n ) wait drop stat ;
 : $$ ( a -- n ) fork 0= if run else drop stop then ;
-: && ( a -- ) fork 0= if run then drop ;
+: && ( a -- ) fork 0= if run then ;
 
 \ These words construct pipelines. There are three. One to
 \ enter a pipeline, one to continue, and one to exit.
