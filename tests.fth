@@ -4,8 +4,7 @@
 require forsh.fth
 
 \ Declare an actor and build its command line arguments.
-128 actor prog
-prog
+act prog
 c program
 char a stage @ sflag
 s b

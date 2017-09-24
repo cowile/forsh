@@ -17,10 +17,13 @@ set-current
 \ argument, set to something else.
 bl sep !
 
+\ This is the default stage size. Anyone that needs a larger
+\ command can make one with 'actor' or change the variable.
+1024 #stage !
+
 \ This is the size for the io buffer when copying between files.
 \ Set it to a KiB by default.
 1024 #io !
 
-\ Add a default actor so commands may happen immediately.
-1024 actor default
-default
+\ Add a default act so commands may happen immediately.
+act default

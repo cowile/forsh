@@ -4,11 +4,16 @@
 \ The buffer holds a sequence of null terminated strings that
 \ represent the command and it's arguments.
 
+: new ( u "name" -- ) create 0 , allot ;
 \ Stages are where actors do their thing. An actor word puts
 \ itself on the stage when executed.
 variable stage
-: new ( u "name" -- ) create 0 , allot ;
+variable #stage
 : actor ( u "name" -- ) new does> stage ! ;
+\ An act does things immediately when created.
+: act ( "name" -- )
+  create here stage ! 0 , #stage @ allot
+  does> stage ! ;
 \ This word exists to show when length is accessed even though
 \ there is nothing to do.
 : >len ;
