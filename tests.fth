@@ -7,7 +7,7 @@ require forsh.fth
 128 actor prog
 prog
 c program
-char a stage @ .s sflag
+char a stage @ sflag
 s b
 s" long" stage @ lflag
 l longer
