@@ -20,7 +20,8 @@ variable status
 : reap ( -- )
   begin
     anyproc status nohang cwaitpid
-  dup 0= swap -1 = or until ;
+  dup 0= swap -1 = or until
+  0 errno ! ;
 
 \c #include <unistd.h>
 c-function cexecvp execvp a a -- n
