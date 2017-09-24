@@ -61,5 +61,5 @@ variable #io
   2drop #io ! ;
 
 \ Copying to standard output or standard error are common cases.
-: tell ( fp -- ) cr stdout copy ;
-: wail ( fp -- ) cr stderr copy ;
+: tell ( fp -- ) cr dup stdout copy close ;
+: wail ( fp -- ) cr dup stderr copy close ;

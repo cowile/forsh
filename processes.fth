@@ -70,7 +70,8 @@ c-function cfork fork -- n
 : >|| ( a -- fp )
   pipe fork 0= if
     fileno stout clone
-    swap run
+    close
+    run
   else
     close nip
   then ;
@@ -84,7 +85,8 @@ c-function cfork fork -- n
   pipe rot fork 0= if
     fileno stin clone
     fileno stout clone
-    swap run
+    close
+    run
   else
     close close nip
   then ;
