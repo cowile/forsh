@@ -24,7 +24,8 @@ variable #stage
 : clear ( a -- ) >len 0 swap ! ;
 
 \ These words construct the components of how unix commands
-\ expect their command arguments to look.
+\ expect their command arguments to look. Nonstandard
+\ syntax can always be handled with a positional argument.
 \ start calculates the address to begin appending to a command.
 : start ( a -- a+u ) dup >len @ + >buf ;
 : c!+ ( c a -- a+1 ) swap over c! 1+ ;

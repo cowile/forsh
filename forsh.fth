@@ -14,7 +14,8 @@ set-current
 
 \ This is the separator that delimits inline arguments.
 \ It is a space character by default. To include spaces in an
-\ argument, set to something else.
+\ argument, set to something else. The word 'q' is defined
+\ to do this conveniently for one field.
 bl sep !
 
 \ This is the default stage size. Anyone that needs a larger
@@ -22,8 +23,8 @@ bl sep !
 1024 #stage !
 
 \ This is the size for the io buffer when copying between files.
-\ Set it to a KiB by default.
-1024 #io !
+\ Set it to 4 KiB by default.
+4096 #io !
 
 \ Add a default act so commands may happen immediately.
 act default
