@@ -27,7 +27,9 @@ variable status
 c-function cexecvp execvp a a -- n
 c-function cfork fork -- n
 
-: fork ( -- n ) cfork ?err ;
+\ Track the process id of the last process forked.
+variable pid
+: fork ( -- n ) cfork ?err dup pid ! ;
 
 \ The exec() system calls require a pointer to a list of null
 \ terminated string pointers that is itself null terminated.
@@ -59,7 +61,7 @@ c-function cfork fork -- n
 
 \ Serially execute a process.
 : run ( a -- ) pad ready exec ;
-: stop ( n -- n ) wait drop stat ;
+: stop ( -- n ) pid @ wait drop stat ;
 : $$ ( a -- n ) reap fork 0= if run else stop then ;
 : && ( a -- ) reap fork 0= if run then ;
 
@@ -104,4 +106,4 @@ c-function cfork fork -- n
   then ;
 
 \ Copy pipe input to standard out.
-: ||> ( a fp -- ) || tell reap ;
+: ||> ( a fp -- n ) || tell stop ;

@@ -51,8 +51,8 @@ variable sep
 \ Execute a program and pipe to other programs.
 : >| ( -- fp ) stage @ >|| ;
 : | ( fp1 -- fp2 ) stage @ swap || ;
-: |> ( fp -- ) stage @ swap ||> ;
+: |> ( fp -- ) stage @ swap ||> drop ;
 
 \ Pipe from and to files.
 : f>| ( a u -- fp ) r/o open-file ?err drop ;
-: |>f ( fp a u -- ) w/o create-file ?err drop copy ;
+: |>f ( fp a u -- ) w/o create-file ?err drop copy stop drop ;
