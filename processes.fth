@@ -6,12 +6,21 @@ require files.fth
 
 \ These words allow examination of child processes.
 \c #include <sys/wait.h>
-c-function cwait wait a -- n
+c-function cwaitpid waitpid n a n -- n
 
+-1 constant anyproc
+0 constant hang
+1 constant nohang
 variable status
-: wait ( -- n ) status cwait ?err ;
+: wait ( n -- n ) status hang cwaitpid ?err ;
 : stat ( -- n ) status @ 8 rshift 255 and ;
 : sig ( -- n ) status @ 255 and ;
+
+\ Call in a loop with nohang to reap all zombies.
+: reap ( -- )
+  begin
+    anyproc status nohang cwaitpid
+  dup 0= swap -1 = or until ;
 
 \c #include <unistd.h>
 c-function cexecvp execvp a a -- n
@@ -49,9 +58,9 @@ c-function cfork fork -- n
 
 \ Serially execute a process.
 : run ( a -- ) pad ready exec ;
-: stop ( -- n ) wait drop stat ;
-: $$ ( a -- n ) fork 0= if run else drop stop then ;
-: && ( a -- ) fork 0= if run then ;
+: stop ( n -- n ) wait drop stat ;
+: $$ ( a -- n ) reap fork 0= if run else stop then ;
+: && ( a -- ) reap fork 0= if run then ;
 
 \ These words construct pipelines. There are three. One to
 \ enter a pipeline, one to continue, and one to exit.
@@ -68,7 +77,8 @@ c-function cfork fork -- n
 \ Otherwise, close the write end and leave the read end on
 \ the stack.
 : >|| ( a -- fp )
-  pipe fork 0= if
+  reap pipe
+  fork 0= if
     fileno stout clone
     close
     run
@@ -82,7 +92,8 @@ c-function cfork fork -- n
 \ Otherwise, leave the read end of the new pipe and close
 \ the others.
 : || ( a fp1 -- fp2 )
-  pipe rot fork 0= if
+  reap pipe rot
+  fork 0= if
     fileno stin clone
     fileno stout clone
     close
@@ -92,4 +103,4 @@ c-function cfork fork -- n
   then ;
 
 \ Copy pipe input to standard out.
-: ||> ( a fp -- ) || tell ;
+: ||> ( a fp -- ) || tell reap ;
