@@ -33,6 +33,6 @@ line read@ close
 1 8 lshift #io !
 36 actor def
 def
-c echo p hi $ drop
+c echo p hi $
 c echo p hello >| c cat |>
 c echo p hello >| s" file" |>f
