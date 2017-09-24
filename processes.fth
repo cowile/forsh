@@ -42,7 +42,7 @@ c-function cfork fork -- n
     swap 2dup !
     cell+
     swap >field
-  loop 2drop ;
+  loop drop 0 swap ! ;
 : ready ( a1 a2 -- a1+u a2 )
   2dup prep swap >buf swap ;
 : exec ( a1 a2 -- ) cexecvp ?err drop ;

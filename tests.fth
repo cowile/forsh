@@ -17,9 +17,10 @@ stage @ >buf 55 type cr
 
 \ Prepare an actor for execution and examine the array of
 \ pointers to strings built on the pad.
+pad 10 cells 255 fill
 stage @ #fields . cr
 stage @ pad ready
-pad 8 cells dump cr
+pad 10 cells dump cr
 2drop
 
 \ Make sure anonymous pipes return valid file pointers.
