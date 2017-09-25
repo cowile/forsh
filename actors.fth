@@ -79,8 +79,11 @@ variable #stage
   iter do
     i c@ 0= if 1+ then
   loop ;
+: clip ( n1 n2 n3 -- n4 ) rot min max ;
 : >fields ( a u1 -- a+u2 ) 0 do >field loop ;
-: field ( a u1 -- a+u2 ) swap >buf swap >fields ;
+: field ( a u1 -- a+u2 )
+  over #fields 0 swap clip
+  swap >buf swap >fields ;
 : back ( a u -- )
   over dup #fields
   rot - field
