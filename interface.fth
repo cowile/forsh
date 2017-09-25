@@ -17,8 +17,14 @@ variable sep
 : co pa ;
 
 : s stage @ sf ;
+: sc 0 do s loop ;
 : l stage @ lf ;
+: lc 0 do l loop ;
 : p stage @ pa ;
+: pc 0 do p loop ;
+
+: bc ( u -- ) stage @ swap back ;
+: b 1 bc ;
 
 \ This is a quoted parg. It changes the separator to the next
 \ character in the stream, then changes it back after getting
