@@ -16,7 +16,6 @@ variable sep
 : pa ( a "string" -- ) get rot parg ;
 : co pa ;
 
-\ These correspond to sflag, lflag, and parg.
 : s stage @ sf ;
 : l stage @ lf ;
 : p stage @ pa ;
@@ -25,7 +24,7 @@ variable sep
 \ character in the stream, then changes it back after getting
 \ the field.
 \ Example, q " this has spaces"
-: quote ( xt -- ) sep @ char sep ! execute sep ! ;
+: quote ( xt "string" -- ) sep @ char sep ! execute sep ! ;
 : q ['] p quote ;
 
 \ Because program names are always first, a new program name
