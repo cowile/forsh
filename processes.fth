@@ -37,16 +37,6 @@ variable pid
 \ buffer. The buffer must be crawled to collect a pointer
 \ to each of the null terminated strings.
 
-: >null ( a -- a+u ) begin 1+ dup c@ 0= until ;
-: >field >null 1+ ;
-: iter ( a -- a+u a )
-  dup >buf swap >len @ bounds ;
-: #fields ( a -- u )
-  0 swap
-  iter do
-    i c@ 0= if 1+ then
-  loop ;
-
 \ a2 is the address where to store the list of string pointers.
 \ It will usually be the pad.
 : prep ( a1 a2 -- )

@@ -63,3 +63,26 @@ variable #stage
 
 \ Store a command the same way as a positional argument.
 : cmd parg ;
+
+: >null ( a -- a+u ) begin 1+ dup c@ 0= until ;
+: >field >null 1+ ;
+: iter ( a -- a+u a )
+  dup >buf swap >len @ bounds ;
+: show ( a -- )
+  iter do
+    i c@ dup
+    0= if drop [char] , then
+    emit
+  loop ;
+: #fields ( a -- u )
+  0 swap
+  iter do
+    i c@ 0= if 1+ then
+  loop ;
+: >fields ( a u1 -- a+u2 ) 0 do >field loop ;
+: field ( a u1 -- a+u2 ) swap >buf swap >fields ;
+: back ( a u -- )
+  over dup #fields
+  rot - field
+  over >buf -
+  swap >len ! ;
