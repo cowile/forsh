@@ -25,6 +25,7 @@ variable sep
 
 : bc ( u -- ) stage @ swap back ;
 : b 1 bc ;
+: sh stage @ show ;
 
 \ This is a quoted parg. It changes the separator to the next
 \ character in the stream, then changes it back after getting

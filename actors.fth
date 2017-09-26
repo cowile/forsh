@@ -66,21 +66,29 @@ variable #stage
 
 : >null ( a -- a+u ) begin 1+ dup c@ 0= until ;
 : >field >null 1+ ;
+: >fields ( a u1 -- a+u2 ) 0 do >field loop ;
+: field ( a u1 -- a+u2 ) swap >buf swap >fields ;
+
+\ Calculate the bounds for iterating over an actor
+\ in a do loop.
 : iter ( a -- a+u a )
   dup >buf swap >len @ bounds ;
+
 : show ( a -- )
   iter do
     i c@ dup
     0= if drop [char] , then
     emit
   loop ;
+
 : #fields ( a -- u )
   0 swap
   iter do
     i c@ 0= if 1+ then
   loop ;
-: >fields ( a u1 -- a+u2 ) 0 do >field loop ;
-: field ( a u1 -- a+u2 ) swap >buf swap >fields ;
+
+\ Delete the most recently added fields.
+\ There is no input validation. Garbage in, garbage out.
 : back ( a u -- )
   over dup #fields
   rot - field
