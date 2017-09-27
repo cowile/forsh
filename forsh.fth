@@ -33,6 +33,7 @@ act cueact
   stage @ cueact
   cr
   s" c pwd" evaluate strip
+  space
   stage ! ;
 ' acue is cue
 

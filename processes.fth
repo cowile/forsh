@@ -52,7 +52,7 @@ variable pid
 \ Serially execute a process.
 : run ( a -- ) pad ready exec ;
 : stop ( -- n ) pid @ wait drop stat ;
-: $$ ( a -- n ) reap fork 0= if run else stop then ;
+: $$ ( a -- n ) reap fork 0= if run else drop stop then ;
 : && ( a -- ) reap fork 0= if run then ;
 
 \ These words construct pipelines. There are three. One to

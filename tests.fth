@@ -35,7 +35,12 @@ line read@ close
 \ See if commands and pipelines work.
 1 8 lshift #io !
 36 actor def
-def
 c echo p hi $
 c echo p hello >| c cat |>
 c echo p hello >| s" file" |>f
+
+\ Define commands as forth words.
+: ls.fth
+  [c] ls [ 2 ] [sc] a l >|
+  [c] grep [p] \.fth$ |> ;
+ls.fth

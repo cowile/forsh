@@ -23,9 +23,10 @@ variable sep
 : lc 0 do l loop ;
 : pc 0 do p loop ;
 
-: bc ( u -- ) stage @ swap back ;
-: b 1 bc ;
-: pr stage @ show ;
+\ Because program names are always first, a new program name
+\ clears the current actor.
+: cl stage @ clear ;
+: c cl p ;
 
 \ This is a quoted parg. It changes the separator to the next
 \ character in the stream, then changes it back after getting
@@ -34,10 +35,19 @@ variable sep
 : quote ( xt "string" -- ) sep @ char sep ! execute sep ! ;
 : q ['] p quote ;
 
-\ Because program names are always first, a new program name
-\ clears the current actor.
-: cl stage @ clear ;
-: c cl p ;
+: geti sep @ parse postpone sliteral ; immediate
+: [s] char postpone literal ['] sf compile, ; immediate
+: [l] postpone geti ['] lf compile, ; immediate
+: [p] postpone geti ['] pa compile, ; immediate
+: [c] ['] cl compile, postpone [p] ; immediate
+
+: [sc] 0 do postpone [s] loop ; immediate
+: [lc] 0 do postpone [l] loop ; immediate
+: [pc] 0 do postpone [p] loop ; immediate
+
+: bc ( u -- ) stage @ swap back ;
+: b 1 bc ;
+: pr stage @ show ;
 
 \ Changing a directory has to be a shell function Unix prevents
 \ programs from changing parents' working directories.
