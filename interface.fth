@@ -7,25 +7,25 @@
 require directories.fth
 require processes.fth
 
+: sf ( c -- ) stage @ sflag ;
+: lf ( a u -- ) stage @ lflag ;
+: pa ( a u -- ) stage @ parg ;
+: co pa ;
+
 \ word has a limit of 255 character string, but no one should
 \ ever need to type that much.
 variable sep
 : get sep @ word count ;
-: sf ( a "string" -- ) char swap sflag ;
-: lf ( a "string" -- ) get rot lflag ;
-: pa ( a "string" -- ) get rot parg ;
-: co pa ;
-
-: s stage @ sf ;
+: s char sf ;
+: l get lf ;
+: p get pa ;
 : sc 0 do s loop ;
-: l stage @ lf ;
 : lc 0 do l loop ;
-: p stage @ pa ;
 : pc 0 do p loop ;
 
 : bc ( u -- ) stage @ swap back ;
 : b 1 bc ;
-: sh stage @ show ;
+: pr stage @ show ;
 
 \ This is a quoted parg. It changes the separator to the next
 \ character in the stream, then changes it back after getting
