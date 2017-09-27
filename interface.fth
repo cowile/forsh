@@ -62,3 +62,9 @@ variable sep
 \ Pipe from and to files.
 : f>| ( a u -- fp ) r/o open-file ?err drop ;
 : |>f ( fp a u -- ) w/o create-file ?err drop copy stop drop ;
+
+\ Set up the outer loop.
+\ The word prompt was already taken by gforth.
+defer cue
+: shell cue begin refill while interpret cue repeat ;
+' shell is 'quit

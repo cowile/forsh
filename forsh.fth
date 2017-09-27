@@ -26,5 +26,15 @@ bl sep !
 \ Set it to 4 KiB by default.
 4096 #io !
 
-\ Add a default act so commands may happen immediately.
+\ Set up a cue to be printed before every command.
+act cueact
+: strip s" >| c tr  s d  p \n |>" evaluate ;
+: acue
+  stage @ cueact
+  cr
+  s" c pwd" evaluate strip
+  stage ! ;
+' acue is cue
+
+\ Add a default act so user commands may happen immediately.
 act default
