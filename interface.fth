@@ -59,10 +59,10 @@ variable sep
 : go ( -- ) cr stage @ run ;
 
 \ Execute a program and wait for it to complete.
-: $ ( -- n ) cr stage @ $$ drop ;
+: $ ( -- n ) stage @ $$ drop ;
 
 \ Execute a program in the background.
-: & ( -- ) cr stage @ && ;
+: & ( -- ) stage @ && ;
 
 \ Execute a program and pipe to other programs.
 : >| ( -- fp ) stage @ >|| ;
@@ -76,5 +76,5 @@ variable sep
 \ Set up the outer loop.
 \ The word prompt was already taken by gforth.
 defer cue
-: shell cue begin refill while interpret cue repeat ;
+: shell cue begin refill while cr interpret cue repeat ;
 ' shell is 'quit
