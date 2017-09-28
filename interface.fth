@@ -35,11 +35,19 @@ variable sep
 : quote ( xt "string" -- ) sep @ char sep ! execute sep ! ;
 : q ['] p quote ;
 
+\ Changing a directory has to be a shell function Unix prevents
+\ programs from changing parents' working directories.
+: d ( "string" -- ) get chdir ;
+: qd ['] d quote ;
+: up s" .." chdir ;
+
 : geti sep @ parse postpone sliteral ; immediate
-: [s] char postpone literal ['] sf compile, ; immediate
+: [s] postpone [char] ['] sf compile, ; immediate
 : [l] postpone geti ['] lf compile, ; immediate
 : [p] postpone geti ['] pa compile, ; immediate
 : [c] ['] cl compile, postpone [p] ; immediate
+: [q] ['] q compile, postpone [p] ; immediate
+: [d] postpone geti ['] chdir compile, ; immediate
 
 : [sc] 0 do postpone [s] loop ; immediate
 : [lc] 0 do postpone [l] loop ; immediate
@@ -48,12 +56,6 @@ variable sep
 : bc ( u -- ) stage @ swap back ;
 : b 1 bc ;
 : pr stage @ show ;
-
-\ Changing a directory has to be a shell function Unix prevents
-\ programs from changing parents' working directories.
-: d ( "string" -- ) get chdir ;
-: qd ['] d quote ;
-: up s" .." chdir ;
 
 \ Execute a program, replacing the current shell.
 : go ( -- ) cr stage @ run ;

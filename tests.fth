@@ -44,3 +44,5 @@ c echo p hello >| s" file" |>f
   [c] ls [ 2 ] [sc] a l >|
   [c] grep [p] \.fth$ |> ;
 ls.fth
+
+: home [d] /home/cwl/ ;
