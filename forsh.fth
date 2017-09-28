@@ -28,12 +28,18 @@ bl sep !
 
 \ Set up a cue to be printed before every command.
 act cueact
-: strip s" >| c tr  s d  p \n |>" evaluate ;
+: strip >| [c] tr [s] d [p] \n |> ;
+: bar [char] | emit ;
+: at [char] @ emit ;
+: arrow [char] > emit ;
 : acue
   stage @ cueact
   cr
-  s" c pwd" evaluate strip
-  space
+  bar space [c] whoami strip
+  at [c] hostname strip
+  space [c] date [p] +%H:%M strip
+  space [c] pwd strip
+  cr bar arrow space
   stage ! ;
 ' acue is cue
 
