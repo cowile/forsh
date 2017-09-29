@@ -46,3 +46,4 @@ c echo p hello >| s" file" |>f
 ls.fth
 
 : home [d] /home/cwl/ ;
+home

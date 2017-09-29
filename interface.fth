@@ -41,13 +41,14 @@ variable sep
 : qd ['] d quote ;
 : up s" .." chdir ;
 
-: geti sep @ parse postpone sliteral ; immediate
-: [s] postpone [char] ['] sf compile, ; immediate
-: [l] postpone geti ['] lf compile, ; immediate
-: [p] postpone geti ['] pa compile, ; immediate
-: [c] ['] cl compile, postpone [p] ; immediate
-: [q] ['] q compile, postpone [p] ; immediate
-: [d] postpone geti ['] chdir compile, ; immediate
+: [get] sep @ parse postpone sliteral ; immediate
+: [s] postpone [char] postpone sf ; immediate
+: [l] postpone [get] postpone lf ; immediate
+: [p] postpone [get] postpone pa ; immediate
+: [c] postpone cl postpone [p] ; immediate
+: [q] ['] [p] quote ; immediate
+: [d] postpone [get] postpone chdir ; immediate
+: [dq] ['] [d] quote ; immediate
 
 : [sc] 0 do postpone [s] loop ; immediate
 : [lc] 0 do postpone [l] loop ; immediate

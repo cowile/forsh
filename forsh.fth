@@ -34,8 +34,7 @@ act cueact
 : arrow [char] > emit ;
 : acue
   stage @ cueact
-  cr
-  bar space [c] whoami strip
+  cr bar space [c] whoami strip
   at [c] hostname strip
   space [c] date [p] +%H:%M strip
   space [c] pwd strip
