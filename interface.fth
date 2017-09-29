@@ -32,12 +32,12 @@ variable sep
 \ character in the stream, then changes it back after getting
 \ the field.
 \ Example, q " this has spaces"
-: quote ( xt "string" -- ) sep @ char sep ! execute sep ! ;
+: quote ( xt "s" -- ) sep @ char sep ! execute sep ! ;
 : q ['] p quote ;
 
 \ Changing a directory has to be a shell function Unix prevents
 \ programs from changing parents' working directories.
-: d ( "string" -- ) get chdir ;
+: d ( "s" -- ) get chdir ;
 : qd ['] d quote ;
 : up s" .." chdir ;
 : ge ( "s" -- a ) get getenv ;
