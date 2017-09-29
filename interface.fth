@@ -4,7 +4,7 @@
 \ programmatic and general words. They are very short for
 \ easy typing.
 
-require directories.fth
+require environment.fth
 require processes.fth
 
 : sf ( c -- ) stage @ sflag ;
@@ -40,6 +40,10 @@ variable sep
 : d ( "string" -- ) get chdir ;
 : qd ['] d quote ;
 : up s" .." chdir ;
+: ge ( "s" -- a ) get getenv ;
+: se ( a u "s" -- ) get setenv ;
+: ue ( "s" -- ) get unsetenv ;
+: ce ( -- ) clearenv ;
 
 : [get] sep @ parse postpone sliteral ; immediate
 : [s] postpone [char] postpone sf ; immediate
