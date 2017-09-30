@@ -45,5 +45,7 @@ c echo p hello >| s" file" |>f
   [c] grep [p] \.fth$ |> ;
 ls.fth
 
+\ Change directories in a forth word.
 : home [d] /home/cwl/ ;
 home
+c pwd $
