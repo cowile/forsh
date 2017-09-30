@@ -51,5 +51,7 @@ home
 c pwd $
 
 \ Show environment variables work.
-s" value" s" var" setenv
-cr s" var=" type s" var" getenv type cr
+s" value" se var
+cr s" var="
+type ge var type cr
+ce
