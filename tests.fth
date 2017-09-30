@@ -41,12 +41,12 @@ c echo p hello >| s" file" |>f
 
 \ Define commands as forth words.
 : ls.fth
-  [c] ls [ 2 ] [sc] a l >|
+  [c] ls [s] a [s] l >|
   [c] grep [p] \.fth$ |> ;
 ls.fth
 
 \ Change directories in a forth word.
-: home [d] /home/cwl/ ;
+: home s" /home/cwl/" chdir ;
 home
 c pwd $
 

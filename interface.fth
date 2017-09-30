@@ -46,17 +46,12 @@ variable sep
 : ce ( -- ) clearenv ;
 
 : [get] sep @ parse postpone sliteral ; immediate
+
 : [s] postpone [char] postpone sf ; immediate
 : [l] postpone [get] postpone lf ; immediate
 : [p] postpone [get] postpone pa ; immediate
 : [c] postpone cl postpone [p] ; immediate
 : [q] ['] [p] quote ; immediate
-: [d] postpone [get] postpone chdir ; immediate
-: [dq] ['] [d] quote ; immediate
-
-: [sc] 0 do postpone [s] loop ; immediate
-: [lc] 0 do postpone [l] loop ; immediate
-: [pc] 0 do postpone [p] loop ; immediate
 
 : bc ( u -- ) stage @ swap back ;
 : b 1 bc ;
