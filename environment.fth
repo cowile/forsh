@@ -4,12 +4,13 @@
 
 require errors.fth
 
+: 3dup dup 2over rot ;
 \ This function converts a counted string into a null
 \ terminated one for consumption by C libraries.
-: count>term ( a1 a2 u -- )
+: move+term ( a1 a2 u -- )
   2dup + 0 swap c! move ;
-: cstring ( a1 u -- a2 )
-  pad swap count>term pad ;
+: cstring ( a1 a2 u -- a2 u+1 )
+  3dup move+term 1+ rot drop ;
 
 \c #include <unistd.h>
 c-function cchdir chdir a -- n
@@ -17,20 +18,22 @@ c-function cchdir chdir a -- n
 \ The function must convert to a null terminated string first.
 \ Move it to the pad because it may not have the extra byte.
 : chdir ( a u -- )
-  cstring cchdir ?err drop ;
+  pad swap cstring drop
+  cchdir ?err drop ;
 
 \c #include <stdlib.h>
-c-function cgetenv getenv a -- a
 c-function csetenv setenv a a n -- n
 c-function cunsetenv unsetenv a -- n
 c-function cclearenv clearenv -- n
 
-0 constant overwrite
-: getenv ( a1 u -- a2 ) cstring cgetenv ?err ;
+\ gforth provides getenv already
+0 constant nooverwrite
+1 constant overwrite
 : setenv ( a1 u1 a2 u2 -- )
-  dup -rot cstring
-  dup >r + 1+ dup >r
-  swap count>term
-  r> r> swap overwrite csetenv ?err drop ;
-: unsetenv ( a u -- ) cstring cunsetenv ?err drop ;
+  pad swap cstring
+  + swap cstring drop
+  pad swap overwrite csetenv ?err drop ;
+: unsetenv ( a u -- )
+  pad swap cstring drop
+  cunsetenv ?err drop ;
 : clearenv ( -- ) cclearenv ?err drop ;

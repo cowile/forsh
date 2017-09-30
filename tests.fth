@@ -49,3 +49,7 @@ ls.fth
 : home [d] /home/cwl/ ;
 home
 c pwd $
+
+\ Show environment variables work.
+s" value" s" var" setenv
+cr s" var=" type s" var" getenv type cr
