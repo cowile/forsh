@@ -4,6 +4,8 @@
 \ The buffer holds a sequence of null terminated strings that
 \ represent the command and it's arguments.
 
+require strings.fth
+
 : new ( u "name" -- ) create 0 , allot ;
 \ Stages are where actors do their thing. An actor word puts
 \ itself on the stage when executed.
@@ -28,13 +30,6 @@ variable #stage
 \ syntax can always be handled with a positional argument.
 \ start calculates the address to begin appending to a command.
 : start ( a -- a+u ) dup >len @ + >buf ;
-: c!+ ( c a -- a+1 ) swap over c! 1+ ;
-: ndash ( a -- a+1 ) [char] - swap c!+ ;
-: mdash ( a -- a+1 ) ndash ndash ;
-: null ( a -- ) 0 swap c! ;
-: fin ( a -- ) null ;
-
-: 3dup dup 2over rot ;
 
 \ Store the long option string at a2.
 : lopt ( a1 u a2 -- )
@@ -63,11 +58,6 @@ variable #stage
 
 \ Store a command the same way as a positional argument.
 : cmd parg ;
-
-: >null ( a -- a+u ) begin 1+ dup c@ 0= until ;
-: >field >null 1+ ;
-: >fields ( a u1 -- a+u2 ) 0 do >field loop ;
-: field ( a u1 -- a+u2 ) swap >buf swap >fields ;
 
 \ Calculate the bounds for iterating over an actor
 \ in a do loop.
