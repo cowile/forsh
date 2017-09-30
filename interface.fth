@@ -10,6 +10,7 @@ require processes.fth
 : sf ( c -- ) stage @ sflag ;
 : lf ( a u -- ) stage @ lflag ;
 : pa ( a u -- ) stage @ parg ;
+: na ( n -- ) stage @ narg ;
 : co pa ;
 
 \ Take an argument directly from an environment variable.

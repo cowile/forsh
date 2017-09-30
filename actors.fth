@@ -59,6 +59,10 @@ variable #stage
 \ Store a command the same way as a positional argument.
 : cmd parg ;
 
+\ Store a number on the stack as a positional argument.
+: narg ( n a -- )
+  swap s>d <# #s #> rot parg ;
+
 \ Calculate the bounds for iterating over an actor
 \ in a do loop.
 : iter ( a -- a+u a )
