@@ -12,6 +12,11 @@ require processes.fth
 : pa ( a u -- ) stage @ parg ;
 : co pa ;
 
+\ Take an argument directly from an environment variable.
+: earg ( a1 u a2 -- )
+  -rot getenv rot parg ;
+: ea ( a u -- ) stage @ earg ;
+
 \ word has a limit of 255 character string, but no one should
 \ ever need to type that much.
 variable sep
@@ -19,6 +24,7 @@ variable sep
 : s char sf ;
 : l get lf ;
 : p get pa ;
+: e get earg ;
 : sc 0 do s loop ;
 : lc 0 do l loop ;
 : pc 0 do p loop ;
@@ -52,6 +58,7 @@ variable sep
 : [p] postpone [get] postpone pa ; immediate
 : [c] postpone cl postpone [p] ; immediate
 : [q] ['] [p] quote ; immediate
+: [e] postpone [get] postpone ea ; immediate
 
 : b stage @ back ;
 : bc ( u -- ) 0 do b loop ;
