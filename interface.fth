@@ -83,6 +83,19 @@ variable sep
 : f>| ( a u -- fp ) r/o open-file ?err drop ;
 : |>f ( fp a u -- ) w/o create-file ?err drop copy stop drop ;
 
+\ This code defines functions to accomplish the same thing
+\ as shell globbing by providing ready-made pipelines with
+\ find and xargs. Example: s" *" match p cp p * p dir |>
+
+\ a1 u1 is the pattern to search for. a2 u2 is a predicate
+\ for the find command. u3 is the maximum search depth.
+bl sep !
+: match ( a1 u1 a2 u2 u3 -- )
+  [c] find [p] . [p] -maxdepth na pa pa [p] -exec ;
+: pmatch s" -path" rot match ;
+: fmatch s" -name" rot match ;
+: m 1 fmatch ;
+
 \ Set up the outer loop.
 \ The word prompt was already taken by gforth.
 defer cue

@@ -50,9 +50,13 @@ ls.fth
 : home s" /home/cwl/" chdir ;
 home
 c pwd $
+d source/forsh
 
 \ Show environment variables work.
 s" value" se var
 cr s" var="
 type ge var type cr
 ce
+
+\ Duplicate the ls command above with matching.
+s" *.fth" m 3 pc echo {} ; $
