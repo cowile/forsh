@@ -53,8 +53,8 @@ variable sep
 : [c] postpone cl postpone [p] ; immediate
 : [q] ['] [p] quote ; immediate
 
-: bc ( u -- ) stage @ swap back ;
-: b 1 bc ;
+: b stage @ back ;
+: bc ( u -- ) 0 do b loop ;
 : pr stage @ show ;
 
 \ Execute a program, replacing the current shell.

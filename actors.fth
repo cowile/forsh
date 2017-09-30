@@ -77,10 +77,12 @@ variable #stage
     i c@ 0= if 1+ then
   loop ;
 
-\ Delete the most recently added fields.
+: >field >null 1+ ;
+: <field 1- <null 1+ ;
+
+\ Delete the most recently added field.
 \ There is no input validation. Garbage in, garbage out.
-: back ( a u -- )
-  over dup #fields
-  rot - field
+: back ( a -- )
+  dup start <field
   over >buf -
   swap >len ! ;

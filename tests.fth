@@ -14,8 +14,9 @@ s" file" stage @ parg
 p /usr/share/longfile
 stage @ >len ? cr
 stage @ show cr
-stage @ 2 back
-stage @ show cr
+stage @ back
+b
+pr cr
 
 \ Prepare an actor for execution and examine the array of
 \ pointers to strings built on the pad.
