@@ -21,14 +21,16 @@ all: $(PROG)
 clean:
 	rm $(PROG)
 
-install: all $(INSTALL)
-	install $(PROG) $(DEST)/$(PROG)
+install: all $(INSTALL) $(DEST)/$(PROG)
 
 uninstall:
 	rm $(INSTALL) $(DEST)/$(PROG)
 
 $(PROG):
-	printf "#! %s\nrequire forsh.fth\n" $(GFORTH) >$@
+	printf "#! %s\nrequire %s.fth\n" $(GFORTH) $(PROG) >$@
+
+$(DEST)/$(PROG): $(PROG)
+	install $(PROG) $(DEST)/$(PROG)
 
 $(GSHARE)/%.fth: %.fth
 	install -m 0644 $< $@
