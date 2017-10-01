@@ -26,6 +26,9 @@ bl sep !
 \ Set it to 4 KiB by default.
 4096 #io !
 
+\ Remove the default boot message
+' noop is bootmessage
+
 \ Set up a cue to be printed before every command.
 act cueact
 : strip >| [c] tr [s] d [p] \n |> ;
@@ -40,7 +43,7 @@ act cueact
   space [c] pwd strip
   cr bar arrow space
   stage ! ;
-' acue is cue
+' acue is 'cue
 
 \ Add a default act so user commands may happen immediately.
 act default

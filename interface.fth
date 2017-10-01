@@ -98,6 +98,6 @@ bl sep !
 
 \ Set up the outer loop.
 \ The word prompt was already taken by gforth.
-defer cue
-: shell cue begin refill while cr interpret cue repeat ;
+defer 'cue
+: shell 'cue begin refill while cr interpret 'cue repeat ;
 ' shell is 'quit
