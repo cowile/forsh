@@ -61,6 +61,7 @@ variable sep
 : d ( "s" -- ) get chdir ;
 : qd ['] d quote ;
 : up s" .." chdir ;
+: home s" HOME" getenv chdir ;
 : ge ( "s" -- a ) get getenv ;
 : se ( a u "s" -- ) get setenv ;
 : ue ( "s" -- ) get unsetenv ;
