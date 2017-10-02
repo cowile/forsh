@@ -53,7 +53,7 @@ variable sep
 \ character in the stream, then changes it back after getting
 \ the field.
 \ Example, q " this has spaces"
-: quote ( xt "s" -- ) sep @ char sep ! execute sep ! ;
+: quote ( xt "s" -- ) sep @ char sep ! swap execute sep ! ;
 : q ['] p quote ;
 
 \ Changing a directory has to be a shell function Unix prevents
