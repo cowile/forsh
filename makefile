@@ -1,4 +1,4 @@
-DEST = /usr/bin
+DEST = /usr/local/bin
 GFORTH = /usr/bin/gforth
 GSHARE = /usr/share/gforth/site-forth
 PROG = forsh
@@ -27,7 +27,8 @@ uninstall:
 	rm $(INSTALL) $(DEST)/$(PROG)
 
 $(PROG):
-	printf "#! %s\nrequire %s.fth\n" $(GFORTH) $(PROG) >$@
+	printf "#!%s\nrequire %s.fth\n" $(GFORTH) $(PROG) >$@
+	chmod u+x $@
 
 $(DEST)/$(PROG): $(PROG)
 	install $(PROG) $(DEST)/$(PROG)
