@@ -58,13 +58,12 @@ c-function cpipe pipe a -- n
 
 \ These words allow io between arbitrary files with user with a user
 \ settable buffer and size.
+variable io
 variable #io
+create iodef 4096 allot
+iodef io !
 
-\ Never mind. Using both variables triggers some kind of gforth bug.
-\ variable io
-\ pad io !
-
-: iobuf ( fp -- a u fp ) pad #io @ rot ;
+: iobuf ( fp -- a u fp ) io #io @ rot ;
 : rin ( fp -- ) iobuf read-file ?err drop ;
 : wout ( fp -- ) iobuf write-file ?err drop ;
 : copy ( fp1 fp2 -- )
