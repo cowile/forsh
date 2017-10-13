@@ -27,7 +27,7 @@ uninstall:
 	rm $(INSTALL) $(DEST)/$(PROG)
 
 $(PROG):
-	printf "#!%s\nrequire %s.fth\n" $(GFORTH) $(PROG) >$@
+	printf "#! %s\nrequire %s.fth\n" $(GFORTH) $(PROG) >$@
 	chmod u+x $@
 
 $(DEST)/$(PROG): $(PROG)
