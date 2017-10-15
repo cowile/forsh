@@ -115,4 +115,5 @@ bl sep !
 \ The word prompt was already taken by gforth.
 defer 'cue
 : shell 'cue begin refill while cr interpret 'cue repeat ;
+' noop is 'cue
 ' shell is 'quit
