@@ -61,10 +61,10 @@ variable pid
   loop drop 0 swap ! ;
 : ready ( a1 a2 -- a1+u a2 )
   2dup prep swap >buf swap ;
-: exec ( a1 a2 -- ) cexecvp ?err drop ;
+: exec ( a1 a2 -- f ) cexecvp ?err ;
 
 \ Serially execute a process.
-: run ( a -- ) pad ready exec ;
+: run ( a -- ) pad ready exec if bye then ;
 : stop ( -- n ) pid @ wait drop stat ;
 : $$ ( a -- n ) reap fork 0= if run else drop stop then ;
 : && ( a -- ) reap fork 0= if run then ;
