@@ -53,18 +53,22 @@ line read@ close
 c echo p hi $
 c echo p hello >| c cat |>
 c echo p hello >| s" file" |>f
+c rm p file $
 
+cr
 \ Define commands as forth words.
 : ls.fth
-  [c] ls [s] a [s] l >|
+  [c] ls >|
   [c] grep [p] \.fth$ |> ;
 ls.fth
 
+cr
+ge PWD se old
 \ Change directories in a forth word.
-: home s" /home/cwl/" chdir ;
 home
 c pwd $
-d source/forsh
+ge old chdir
+$
 
 \ Show environment variables work.
 s" value" se var
@@ -72,5 +76,9 @@ cr s" var="
 type ge var type cr
 ce
 
+cr
 \ Duplicate the ls command above with matching.
 s" *.fth" m 3 pc echo {} ; $
+
+\ Observe terminal settings.
+c stty s a $
