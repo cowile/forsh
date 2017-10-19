@@ -114,6 +114,18 @@ bl sep !
 \ Set up the outer loop.
 \ The word prompt was already taken by gforth.
 defer 'cue
-: shell 'cue begin refill while cr interpret 'cue repeat ;
+defer 'init
+: wrap ( -- ) stage @ status @ 'cue status ! stage ! ;
+
+\ By default, gforth uses nonstandard terninal settings
+\ that prevent some commands from functioning properly.
+\ This fixes that.
+: fixtty [c] stty [p] icrnl [p] icanon [p] echo $ ;
+: shell ( -- )
+  fixtty 'init wrap
+  begin refill while
+    cr interpret wrap
+  repeat ;
+' noop is 'init
 ' noop is 'cue
 ' shell is 'quit

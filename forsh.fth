@@ -50,14 +50,14 @@ act cueact
 : at [char] @ emit ;
 : arrow [char] > emit ;
 : acue
-  stage @ cueact
+  cueact
   cr bar space [c] whoami strip
   at [c] hostname strip
   space [c] date [p] +%H:%M strip
   space [c] pwd strip
-  cr bar arrow space
-  stage ! ;
+  cr bar arrow space ;
 ' acue is 'cue
 
 \ Add a default act so user commands may happen immediately.
 act default
+quit
