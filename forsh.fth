@@ -60,4 +60,3 @@ act cueact
 
 \ Add a default act so user commands may happen immediately.
 act default
-quit

@@ -116,13 +116,15 @@ bl sep !
 defer 'cue
 defer 'init
 : wrap ( -- ) stage @ status @ 'cue status ! stage ! ;
+: +canon [c] stty [p] icanon [p] icrnl [p] echo $ ;
+: -canon [c] stty [p] -icanon [p] -icrnl [p] -echo $ ;
+: passwd +canon [c] passwd $ -canon ;
 
 \ By default, gforth uses nonstandard terninal settings
 \ that prevent some commands from functioning properly.
 \ This fixes that.
-: fixtty [c] stty [p] icrnl [p] icanon [p] echo $ ;
 : shell ( -- )
-  fixtty 'init wrap
+  'init wrap
   begin refill while
     cr interpret wrap
   repeat ;
