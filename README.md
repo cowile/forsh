@@ -34,8 +34,13 @@ Thus, `c progname s so l longopt p filename` is equivalent to `progname -so --lo
 
 Though slightly more verbose, the Forsh version avoids the need to type `-` all the time.
 
-Here we come to a significant difference. /bin/sh executes the command on hitting the enter key. Forsh makes execution more explicit. The construction commands, when executed, only construct the command on the stage. The `$` word executes the command pointed to by stage.
+Here we come to a significant difference. /bin/sh executes the command on hitting the enter key. Forsh makes execution more explicit. The construction commands, when executed, only construct the command on the stage. The `$` word executes the command pointed to by stage. `%` does the same, but executes in the background rather than waiting for the command to finish.
 
 `c ls $` executes the `ls` program. A side effect of the separation of construction from execution is that commands stick around after being executed. Executing the same command again is as simple as typing `$` again.
 
-# Pipelines
+## Pipelines and IO Redirection
+
+There are 5 words for building pipes, >|, |, |>, f>|, |>f. >| enters a pipe. | continues a pipe. |> exits a pipe. The f variants perform like the analogous pipe words but read and write files instead of standard in and standard out. Like `$`, these words execute the current command. The reason for so many is that the words work by passing around file pointers on the Forth stack. This adds power as it is easy to interface external processes with Forth code that reads and writes files.
+
+More examples, `c ls >| c grep p txt$ |>` is equivalent to `ls | grep txt$`.
+`c ls s" filename" |>f` is equivalent to `ls > filename`.
