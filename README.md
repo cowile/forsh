@@ -4,6 +4,18 @@
 
 Forsh is a shell built on top of Gforth. It allows one to easily operate a Unix-like OS without leaving the gforth environment and can serve as a fully featured replacement to the Bourne Shell and derivatives such as Bash.
 
+## Support
+
+Forsh should run on any unix-like operating system supported by Gforth.
+
+## Building
+
+Forsh depends on Gforth and libtool. Whatever version is provided by the package manager should be fine.
+
+Download the source code. Run make. Note that the makefile assumes some standard locations. For example, Gforth is located at /usr/bin/gforth. If this is not the case, run make GFORTH=/path/to/gforth.
+
+To install, run make install as root.
+
 ## Introduction
 
 /bin/sh has long been the trusty workhorse of the unix world. It provides many convenient features that give power to the user of the operating system, but programmers have often lamented that it does not behave like their favorite programming language. New users are easily confused by the slew of metacharacters, quoting, substitutions, and syntaxes.
