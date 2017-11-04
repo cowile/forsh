@@ -6,31 +6,24 @@ Forsh is a shell built on top of Gforth. It allows one to easily operate a Unix-
 
 ## Introduction
 
-To fully take advantage of Forsh, it is recommended one have a reasonable understanding of the Forth language and underlying environment. The rest of this guide will be predicated on such knowledge, but first, a few examples.
+/bin/sh has long been the trusty workhorse of the unix world. It provides many convenient features that give power to the user of the operating system, but programmers have often lamented that it does not behave like their favorite programming language. New users are easily confused by the slew of metacharacters, quoting, substitutions, and syntaxes.
 
-`c ls $` executes the ls command. c is a parsing word that takes word after it as the program name to be executed. $ executes the program. This is equivalent to just `ls` at a regular BAsh prompt.
+Forsh is an experiment in shell design. Can a unix shell keep the power and usefulness of /bin/sh while remaining embedded in a consistent and general programming environment?
 
-`c ls s a $` is close to the same. s is similar to c, but s takes the following character as a short option. long options use the letter l. That line is the same as `ls -a` in Bash.
+An understanding of Forth is beyond the scope of this document, but is extremely helpful for understanding how to use the environment to the fullest and provides insight into design choices.
 
-## Motivation
+## Basic Use
 
-Bash is no doubt a familiar tool to anyone who wants maximum control and power over their OS. Command lines remain unmatched in their power and expressiveness in telling the computer what to do and are likely to remain so for some time. Unfortunately, the main shell languages in use are full of quirks, tricks, and traps that counfound new and veteran users alike. Some of the problems with Bash include but are not limited to:
+Commands are constructed incrementally in text buffers called actors. The global variable stage points to the actor currently in use.
 
-* complex and arcane syntax
-* a slew of metacharacters that must be understood and quoted when appropriate
-* different behaviors for different kinds of quoting
-* no structured data, everything is a string
-* second-class programming language constructs
+The human interface words for constructing commands are very brief in the interest of human typing. The main ones are c, s, l, and p. c clears the current actor and reads in the program name of the new command. s reads in a block of short options. l reads in a single long option. p reads in a positional argument to the program.
 
-However, Bash and kin have proven remarkably sticky as shell languages due to several advantages such as:
+Thus, `c progname s so l longopt p filename` is equivalent to `progname -so --longopt filename`.
 
-* Concise notation for common shell actions
-* ease of I/O redirection
-* ease of pipeline creation
-* prioritization of the interface over the language
+Though slightly more verbose, the Forsh version avoids the need to type `-` all the time.
 
-Forsh was created to bring the advantages of Bash to a proper programming environment.
+Here we come to a significant difference. /bin/sh executes the command on hitting the enter key. Forsh makes execution more explicit. The construction commands, when executed, only construct the command on the stage. The `$` word executes the command pointed to by stage.
 
-## Using Forsh
+`c ls $` executes the `ls` program. A side effect of the separation of construction from execution is that commands stick around after being executed. Executing the same command again is as simple as typing `$` again.
 
-Forsh works by utilizing the underlying Forth interpreter. In Forth, programs consist of "words". A Word is any sequence of printable characters. Words are separated by whitespace.
+# Pipelines
