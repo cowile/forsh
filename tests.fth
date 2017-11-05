@@ -20,7 +20,7 @@ require forsh.fth
 \ Declare an actor and build its command line arguments.
 act prog
 c program
-char a stage @ sflag
+s" short" stage @ sflag
 s b
 s" long" stage @ lflag
 l longer

@@ -21,7 +21,7 @@
 require environment.fth
 require processes.fth
 
-: sf ( c -- ) stage @ sflag ;
+: sf ( a u -- ) stage @ sflag ;
 : lf ( a u -- ) stage @ lflag ;
 : pa ( a u -- ) stage @ parg ;
 : na ( n -- ) stage @ narg ;
@@ -36,7 +36,7 @@ require processes.fth
 \ ever need to type that much.
 variable sep
 : get sep @ word count ;
-: s char sf ;
+: s get sf ;
 : l get lf ;
 : p get pa ;
 : e get earg ;
@@ -69,7 +69,7 @@ variable sep
 
 : [get] sep @ parse postpone sliteral ; immediate
 
-: [s] postpone [char] postpone sf ; immediate
+: [s] postpone [get] postpone sf ; immediate
 : [l] postpone [get] postpone lf ; immediate
 : [p] postpone [get] postpone pa ; immediate
 : [c] postpone cl postpone [p] ; immediate

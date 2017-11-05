@@ -45,29 +45,26 @@ variable #stage
 \ start calculates the address to begin appending to a command.
 : start ( a -- a+u ) dup >len @ + >buf ;
 
-\ Store the long option string at a2.
-: lopt ( a1 u a2 -- )
+\ Store the option string at a2.
+: option ( a1 u a2 -- )
   3dup swap move + fin drop ;
 
-\ Store the short option character at a.
-: sopt ( c a -- ) c!+ fin ;
-
 \ Store a '-c' style argument.
-: sflag ( c a -- )
-  dup -rot
-  start ndash sopt
-  3 +len ;
+: sflag ( a1 u a2 -- )
+  3dup
+  start ndash option
+  swap 2 + +len drop ;
 
 \ Store a '--long-flag' style argument.
 : lflag ( a1 u a2 -- )
   3dup
-  start mdash lopt
+  start mdash option
   swap 3 + +len drop ;
 
 \ Store a plain positional argument.
 : parg ( a1 u a2 -- )
   3dup
-  start lopt
+  start option
   swap 1+ +len drop ;
 
 \ Store a command the same way as a positional argument.
