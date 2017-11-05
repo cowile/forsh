@@ -12,7 +12,9 @@ forsh should run on any 64-bit unix-like operating system supported by gforth.
 
 forsh depends on gforth and libtool. Whatever version is provided by the package manager should be fine.
 
-Download the source code. Run `make`. Note that the makefile assumes some standard locations. For example, gforth is located at /usr/bin/gforth. If this is not the case, run `make GFORTH=/path/to/gforth`. Refer to the makefile for the complete list of variables.
+1. Download the source code.
+1. If using Mac OS or BSD, run `git checkout x86_64-BSD`.
+1. Run `make`. Note that the makefile assumes some standard locations. For example, gforth is located at /usr/bin/gforth. If this is not the case, run `make GFORTH=/path/to/gforth`. Refer to the makefile for the complete list of variables.
 
 To install, run `make install` as root.
 
@@ -22,7 +24,7 @@ To install, run `make install` as root.
 
 forsh is an experiment in shell design. Can a unix shell keep the power and usefulness of /bin/sh while remaining embedded in a consistent and general programming environment?
 
-An understanding of Forth is beyond the scope of this document, but is extremely helpful for understanding how to use the environment to the fullest and provides insight into design choices.
+An understanding of Forth is beyond the scope of this document, but is required for understanding how to use the environment to the fullest and provides insight into design choices.
 
 ## Basic Use
 
@@ -38,8 +40,26 @@ Though slightly more verbose, the forsh version avoids the need to type `-` all 
 
 `c ls $` executes the `ls` program. A side effect of the separation of construction from execution is that commands stick around after being executed. Executing the same command again is as simple as typing `$` again.
 
+## Navigation
+
+The current working directory is changed with the word `d`. `d dir` is equivalent to `cd dir`. The words `up` and `home` navigate one directory up and to the home directory.
+
 ## Pipelines and Redirection
 
-There are 5 words for building pipes: `>|`, `|`, `|>`, `f>|`, and `|>f`. `>|` enters a pipe. `|` continues a pipe. `|>` exits a pipe. The f variants perform like the analogous pipe words but read and write files instead of standard in and standard out. Like `$`, these words execute the current command. The reason for so many is that the words work by passing around file pointers on the Forth stack. This adds power as it is easy to interface external processes with Forth code that reads and writes files.
+There are 5 words for building pipes: `>|`, `|`, `|>`, `f>|`, and `|>f`. `>|` enters a pipe. `|` continues a pipe. `|>` exits a pipe. The f variants perform like the analogous pipe words but read and write files instead of standard in and standard out. Like `$`, these words execute the current command.
 
 More examples, `c ls >| c grep p txt$ |>` is equivalent to `ls | grep txt$`. `c ls s" filename" |>f` is equivalent to `ls > filename`.
+
+## Environment Variables
+
+Environment variables are managed with the words `se` and `ge` for setting and getting environment variables. They are used like so:
+
+`s" value" se var` sets the variable `var` to the string "value". `ge var` puts a pointer and length showing where the string "value" resides. You can display the contents of `var` with `ge var type`.
+
+Environment variables can also be used directly in command line constructions with the word `e`. `c echo e var` is equivalent to `echo $var`.
+
+## Quoting
+
+Position arguments may be delimited with the character of choice by using the word `q`. This allows, for example, arguments with spaces in them. `q` takes the first character it encounters as the delimiting character and reads, minus initial whitespace, until it encounters the same character again.
+
+`c echo q " this is a spaced argument"` is equivalent to `echo "this is a spaced argument"`. Unlike /bin/sh, this is the only type of quoting. In general, quoting is needed much less in forsh than in /bin/sh due to far fewer metacharacters.
