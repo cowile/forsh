@@ -63,3 +63,7 @@ Environment variables can also be used directly in command line constructions wi
 Position arguments may be delimited with the character of choice by using the word `q`. This allows, for example, arguments with spaces in them. `q` takes the first character it encounters as the delimiting character and reads, minus initial whitespace, until it encounters the same character again.
 
 `c echo q " this is a spaced argument"` is equivalent to `echo "this is a spaced argument"`. Unlike /bin/sh, this is the only type of quoting. In general, quoting is needed much less in forsh than in /bin/sh due to far fewer metacharacters.
+
+## Advanced Use
+
+To take advantage of the forsh programming interface, read the code. There isn't much. What is there is heavily commented and, in the author's opinion, a genuine attempt at good Forth style with short and much factored words.
