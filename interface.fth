@@ -116,13 +116,15 @@ bl sep !
 defer 'cue
 defer 'init
 : wrap ( -- ) stage @ status @ 'cue status ! stage ! ;
+
+\ By default, gforth uses nonstandard terminal settings
+\ that prevent some commands from functioning properly.
+\ This fixes that.
 : +canon [c] stty [p] icanon [p] icrnl [p] echo $ ;
 : -canon [c] stty [p] -icanon [p] -icrnl [p] -echo $ ;
 : passwd +canon [c] passwd $ -canon ;
 
-\ By default, gforth uses nonstandard terninal settings
-\ that prevent some commands from functioning properly.
-\ This fixes that.
+\ Replace the default gforth interpreter loop.
 : shell ( -- )
   'init wrap
   begin refill while
