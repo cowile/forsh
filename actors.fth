@@ -45,7 +45,9 @@ variable #stage
 \ start calculates the address to begin appending to a command.
 : start ( a -- a+u ) dup >len @ + >buf ;
 
-\ Store the option string at a2.
+\ Store the option string at a2. All option strings are null
+\ terminated because null is used as a string terminator for
+\ compatibility with C strings.
 : option ( a1 u a2 -- )
   3dup swap move + fin drop ;
 
